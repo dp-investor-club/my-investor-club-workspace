@@ -1,7 +1,5 @@
 # Block 4: 모드 — plan과 auto
 
-> 📖 공식 문서: https://code.claude.com/docs/ko/cli-usage
-
 ## EXPLAIN
 
 **수업 복습**: "shift+tab을 누르면 아래 모드가 바뀝니다 — 전부 허락받는 모드, 자동 수락(accept edits), 플랜 모드(먼저 계획을 논의), 오토(자율주행). 저는 보통 플랜 아니면 오토로 씁니다."

@@ -1,8 +1,5 @@
 # Block 0: Setup (혼자 진행자용 — 수업 참석자는 스킵)
 
-> 📖 공식 문서: https://code.claude.com/docs/ko/setup
-> 📖 빠른 시작: https://code.claude.com/docs/ko/quickstart
-
 ## EXPLAIN
 
 안심하고 시작하세요: **최난관은 이 설치이고, 이후엔 명령어를 직접 칠 일이 거의 없습니다** — 이전 기수 실측으로 환경 문제는 첫날 집중되고 이후 급감했습니다. 막히는 건 통과의례입니다.

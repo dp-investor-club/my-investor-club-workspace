@@ -1,4 +1,4 @@
-# Block 8: 자기 선언 — Week 1 과제
+# Block 6: 자기 선언 — Week 1 과제
 
 ## EXPLAIN
 
@@ -24,8 +24,8 @@
 ```
 [Week1 제출] 나의 선언
 - (journey.md의 선언 2~4줄)
-- 오늘 지은 것: weeks/ 서랍 · CLAUDE.md 시드 · 나만의 status line
-- 오늘 탐험한 것: 위임 / 읽기 / AskUserQuestion / plan mode / 규칙 작동 실험
+- 오늘 지은 것: weeks/ 서랍 · 나의 CLAUDE.md
+- 오늘 탐험한 것: 위임 / 읽기 / AskUserQuestion / plan mode
 ```
 
 3. 예고: "다음 수업(7/15) 전 `/prep-week2` — 수요일 하루(강연 발표 + 모의투자 + AI 수업)에 쓸 재료를 준비합니다."

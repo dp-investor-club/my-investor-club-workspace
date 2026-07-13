@@ -1,7 +1,5 @@
 # Block 1: Why — 왜 터미널인가
 
-> 📖 공식 문서: https://code.claude.com/docs/ko/how-claude-code-works
-
 ## EXPLAIN
 
 **수업 복습**: "왜 개발자가 아닌 우리가 터미널에서 일해야 하는가 — 이것을 기술 해방이라고 부릅니다. GUI는 버튼만 누를 수 있지만, CLI는 컴퓨터의 모든 것을 할 수 있습니다."
