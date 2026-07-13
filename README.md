@@ -33,7 +33,7 @@
 
 | 시점 | 스킬 |
 |---|---|
-| 지금 | `/week1-onboarding` (Week 1 과제 포함), `/prep-week2` |
+| 지금 | `/week1-onboarding` (수업 복습 + 기능 탐험 + 자기 선언 = Week 1 과제), `/prep-week2` |
 | Week 2 수업에서 | `/week2` + 여러분이 직접 만드는 첫 스킬 |
 | 이후 매주 | `/prep-weekN` → `/weekN` … 그리고 여러분의 스킬들 |
 
