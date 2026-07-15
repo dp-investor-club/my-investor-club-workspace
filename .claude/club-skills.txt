@@ -1,0 +1,14 @@
+# 클럽 소유 스킬 목록 (manifest)
+# /update 가 이 목록의 스킬만 템플릿에서 받아온다.
+# 여기 없는 .claude/skills/* 는 참가자 소유 → 절대 덮어쓰지 않음.
+week1-onboarding
+prep-week2
+week2
+clarify
+update
+club-archive
+context-layer-builder
+mechanism-question-builder
+harness-check
+submit
+github-helper
