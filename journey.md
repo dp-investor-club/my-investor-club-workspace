@@ -45,3 +45,4 @@
 
 - 7/15: 오늘 weeks/ 강의안 서랍을 지었다
 - 7/15: archive 스킬을 만들고, 1주차 강연 정리본을 Google Drive에서 가져와 outputs/week-01-archive.md로 축적했다
+- 7/20: weekly-check 스킬을 만들고, 거시·금리 환경(한국은행·연준 기준금리)을 확인해 outputs/weekly-check-2026-07-20.md로 남기고 context.md 소스 이력에 반영했다
