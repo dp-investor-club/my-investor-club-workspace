@@ -4,6 +4,7 @@
 week1-onboarding
 prep-week2
 week2
+week3
 clarify
 update
 club-archive
