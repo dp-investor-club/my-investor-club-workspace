@@ -59,3 +59,5 @@
 ### 2026-07-30 week4 Block1 세션
 - 한 것: /update로 클럽 스킬 최신화(week4, skill-tuneup 신규), skill-tuneup으로 industry-map 점검·수리(첫 실행 예시 추가, "이 스킬은" 4줄 작성), 세 줄 결산
 - 보강: 산업군 분석 스킬 새로 만들기
+- push 실패 원인 (2026-07-30): GitHub collaborator 초대 전 — branch skill/nicekimms1025-industry-map, commit 6450b19 로컬 대기 중 (초대 승인 후 push 성공)
+- (2026-07-30) 내 스킬 PR: https://github.com/dp-investor-club/my-investor-club-workspace/pull/1
