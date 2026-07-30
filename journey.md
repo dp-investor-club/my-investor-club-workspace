@@ -62,3 +62,4 @@
 - push 실패 원인 (2026-07-30): GitHub collaborator 초대 전 — branch skill/nicekimms1025-industry-map, commit 6450b19 로컬 대기 중 (초대 승인 후 push 성공)
 - (2026-07-30) 내 스킬 PR: https://github.com/dp-investor-club/my-investor-club-workspace/pull/1
 - (2026-07-30) 내 스킬 PR: https://github.com/dp-investor-club/my-investor-club-workspace/pull/3 (company-analysis)
+- (2026-07-30) 웹 배포: https://deploy-xi-eight-71.vercel.app (context.md)
