@@ -12,6 +12,7 @@ description: 클럽이 새로 올린 스킬(예: week2, clarify)을 내 작업�
 - 템플릿 레포: `github.com/dp-investor-club/my-investor-club-workspace` (브랜치 `main`)
 - 클럽 소유 스킬 목록(manifest): 레포 루트의 `.claude/club-skills.txt`
 - manifest에 없는 `.claude/skills/*` 는 **참가자 소유** → 절대 건드리지 않는다.
+- 클럽 소유 **문서**: `curriculum.md` 1개. 클럽이 갱신하는 공통 지도이므로 스킬과 함께 받아온다.
 
 ## 절차
 
@@ -32,12 +33,24 @@ description: 클럽이 새로 올린 스킬(예: week2, clarify)을 내 작업�
    ```
    폴더가 없으면 새로 만들고, 있으면 덮어쓴다(클럽 스킬이므로).
 
-3. **안전 규칙**:
+3. **`curriculum.md` 갱신** (클럽 소유 문서):
+   ```
+   # 기존 파일이 있으면 먼저 사본을 남긴다
+   cp curriculum.md curriculum.md.bak   # 있을 때만
+   curl -fsSL https://raw.githubusercontent.com/dp-investor-club/my-investor-club-workspace/main/curriculum.md -o curriculum.md
+   ```
+   - 받은 뒤 **무엇이 바뀌었는지 요약해서 알려준다**(`diff curriculum.md.bak curriculum.md` 참고).
+     특히 "지금 내 작업실에 있어야 하는 것" 체크리스트에 새로 생긴 항목을 짚어준다.
+   - 참가자가 `curriculum.md` 에 개인 메모를 써 놨을 수 있다. 사본(`curriculum.md.bak`)이
+     남아 있으니 그 사실을 알려주고, 개인 메모는 `journey.md` 로 옮기라고 안내한다.
+
+4. **안전 규칙**:
    - manifest에 **없는** `.claude/skills/` 폴더는 절대 삭제·수정하지 않는다 (참가자 소유).
-   - `journey.md` `CLAUDE.md` `context.md` `curriculum.md` `outputs/` `weeks/` 등 참가자 파일도 건드리지 않는다.
+   - `journey.md` `CLAUDE.md` `context.md` `outputs/` `weeks/` 등 참가자 파일은 건드리지 않는다.
+     (`curriculum.md` 는 예외 — 위 3번대로 클럽이 갱신한다.)
    - 크레덴셜·토큰 파일은 받지도 만들지도 않는다.
 
-4. 끝나면 보고한다: **받은 스킬 목록 / 새로 생긴 것 / 갱신된 것**. 그리고 새 스킬을 어떻게 쓰는지 한 줄씩 안내한다 (예: "`/week2` 로 이번 주 실습 시작").
+5. 끝나면 보고한다: **받은 스킬 목록 / 새로 생긴 것 / 갱신된 것 / `curriculum.md` 변경 요약**. 그리고 새 스킬을 어떻게 쓰는지 한 줄씩 안내한다 (예: "`/week2` 로 이번 주 실습 시작").
 
 ## 동료 스킬 받기 (Week 4부터, 선택)
 
