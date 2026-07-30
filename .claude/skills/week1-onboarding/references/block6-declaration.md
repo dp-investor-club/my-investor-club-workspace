@@ -24,7 +24,7 @@
 ```
 [Week1 제출] 나의 선언
 - (journey.md의 선언 2~4줄)
-- 오늘 지은 것: weeks/ 서랍 · 나의 CLAUDE.md
+- 오늘 지은 것: weeks/week-01 내 개념정리 · 나의 CLAUDE.md
 - 오늘 탐험한 것: 위임 / 읽기 / AskUserQuestion / plan mode
 ```
 
