@@ -73,6 +73,6 @@ description: 매일 거시경제 지표(한국·미국 기준금리, 원/달러 
 
 | 종목 | 매입가 | 최신값 | 수익률 | 라벨 |
 |---|---|---|---|---|
-| 비트코인(BTC) | unknown | 2,000,000원 | unknown — 매입가·매입일을 holdings.md에 채우면 계산 가능 | — |
-| TIGER S&P500 | unknown | 2,000,000원 | unknown — 매입가·매입일을 holdings.md에 채우면 계산 가능 | — |
+| 비트코인(BTC) | unknown | X,XXX,XXX원 | unknown — 매입가·매입일을 holdings.md에 채우면 계산 가능 | — |
+| TIGER S&P500 | unknown | X,XXX,XXX원 | unknown — 매입가·매입일을 holdings.md에 채우면 계산 가능 | — |
 ```
