@@ -12,7 +12,7 @@ description: 클럽이 새로 올린 스킬(예: week2, clarify)을 내 작업�
 - 템플릿 레포: `github.com/dp-investor-club/my-investor-club-workspace` (브랜치 `main`)
 - 클럽 소유 스킬 목록(manifest): 레포 루트의 `.claude/club-skills.txt`
 - manifest에 없는 `.claude/skills/*` 는 **참가자 소유** → 절대 건드리지 않는다.
-- 클럽 소유 **문서**: `curriculum.md` 1개. 클럽이 갱신하는 공통 지도이므로 스킬과 함께 받아온다.
+- 클럽 소유 **문서**: `curriculum.md`(공통 지도) + `club/` 전체(주차별 클럽 자료). 둘 다 클럽이 갱신하므로 스킬과 함께 받아온다.
 
 ## 절차
 
@@ -44,13 +44,25 @@ description: 클럽이 새로 올린 스킬(예: week2, clarify)을 내 작업�
    - 참가자가 `curriculum.md` 에 개인 메모를 써 놨을 수 있다. 사본(`curriculum.md.bak`)이
      남아 있으니 그 사실을 알려주고, 개인 메모는 `journey.md` 로 옮기라고 안내한다.
 
-4. **안전 규칙**:
+4. **`club/` 갱신** (클럽 소유 주차 자료):
+   ```
+   # 템플릿 트리에서 club/ 로 시작하는 blob 경로 전부 추출
+   curl -fsSL "https://api.github.com/repos/dp-investor-club/my-investor-club-workspace/git/trees/main?recursive=1" \
+     | (파이썬/grep으로 "club/" 로 시작하는 blob 경로 추출)
+   # 각 경로를 raw로 받아 같은 상대경로에 저장 (없으면 폴더 생성, 있으면 덮어쓴다)
+   ```
+   - `club/` 은 **읽기전용 클럽 자료**이므로 덮어쓰기가 정상이다. 참가자가 여기를 고쳤다면 그 사실을 알려주고, 고친 내용은 `weeks/week-0N/` 로 옮기라고 안내한다.
+   - 받은 뒤 **새로 생긴 주차 자료를 짚어준다**: "week-03 materials 에 강의자료가 새로 올라왔습니다" 처럼.
+   - 용량이 큰 파일(강의 슬라이드 html 등)이 있으니, 받는 중이라고 한 줄 알려준다.
+
+5. **안전 규칙**:
    - manifest에 **없는** `.claude/skills/` 폴더는 절대 삭제·수정하지 않는다 (참가자 소유).
-   - `journey.md` `CLAUDE.md` `context.md` `outputs/` `weeks/` 등 참가자 파일은 건드리지 않는다.
-     (`curriculum.md` 는 예외 — 위 3번대로 클럽이 갱신한다.)
+   - `journey.md` `CLAUDE.md` `context.md` `outputs/` **`weeks/`** 등 참가자 파일은 건드리지 않는다.
+     (`curriculum.md` 와 `club/` 은 예외 — 위 3·4번대로 클럽이 갱신한다.)
+   - **`weeks/` 와 `club/` 을 혼동하지 않는다**: `weeks/` = 참가자 소유(보호), `club/` = 클럽 소유(갱신).
    - 크레덴셜·토큰 파일은 받지도 만들지도 않는다.
 
-5. 끝나면 보고한다: **받은 스킬 목록 / 새로 생긴 것 / 갱신된 것 / `curriculum.md` 변경 요약**. 그리고 새 스킬을 어떻게 쓰는지 한 줄씩 안내한다 (예: "`/week2` 로 이번 주 실습 시작").
+6. 끝나면 보고한다: **받은 스킬 목록 / 새로 생긴 것 / 갱신된 것 / `curriculum.md` 변경 요약 / `club/` 신규 주차 자료**. 그리고 새 스킬을 어떻게 쓰는지 한 줄씩 안내한다 (예: "`/week2` 로 이번 주 실습 시작").
 
 ## 동료 스킬 받기 (Week 4부터, 선택)
 
