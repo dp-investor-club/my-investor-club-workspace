@@ -63,3 +63,5 @@ AI에게 1차 조사를 맡기고, 나는 이해될 때까지 되물어 검증�
 - 한 것: Week3 병목 확정, check-in 스킬에 3-1 단계 추가(market-scan 결과 → 인사이트/시장뷰 → context.md 기록), 방산 스캔에 1회 실행해 방산 판단 이유 기록
 - 판단: 방산 — 규제 변화(재수출 허가기간 2년→5년)가 구조적 호재로 보이나, 수출전망 숫자(377억달러)는 출처 불분명해 실제 계약 건수로 재확인 필요 (context.md 참고)
 - 보강: 새로운 스킬 하나 더 만들어보기
+
+- (2026-07-30) 내 스킬 PR: https://github.com/dp-investor-club/my-investor-club-workspace/pull/7
