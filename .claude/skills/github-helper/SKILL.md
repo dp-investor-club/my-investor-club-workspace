@@ -5,13 +5,16 @@ description: git/GitHub 초보자의 일상 언어 질문을 git 작업으로 �
 
 # GitHub Helper — 초보자 안전망
 
-참가자는 비개발자다. 이 skill의 역할은 **일상 언어 → git 작업 번역**과 **패닉 진정**이다. 모든 작업은 main 브랜치에서 직접 한다 (feature branch, PR 없음).
+참가자는 비개발자다. 이 skill의 역할은 **일상 언어 → git 작업 번역**과 **패닉 진정**이다. 내 스킬을 남에게 넘기는 작업(Week 4부터)은 `skill/{ID}-{스킬이름}` 브랜치 + PR로 하고, 그 절차는 `/submit`이 대신 실행한다 — 참가자가 git 명령을 외울 필요는 없다.
 
 ## 질문 번역표
 
 | 참가자의 말 | 실제 의도 | 실행 |
 |---|---|---|
 | "올리고 싶어 / 저장하고 싶어" | commit + push | `/submit` 권장, 급하면 add → commit → push |
+| "PR이 뭐야 / 어떻게 보내" | 브랜치 + PR | `/submit` 이 전 과정을 대신한다 — 직접 칠 필요 없음 |
+| "PR 보냈는데 뭘 기다려" | 리뷰 대기 | 강사 리뷰 → 코멘트면 같은 브랜치에 다시 commit+push하면 PR이 자동 갱신 |
+| "머지됐다는데 내 로컬은?" | main 동기화 | `git checkout main` → `git pull origin main` |
 | "최신 걸로 받고 싶어" | pull | `git pull --rebase origin main` |
 | "뭐가 바뀌었는지 보고 싶어" | status / diff | `git status`, `git diff` |
 | "아까 걸로 되돌리고 싶어" | 미커밋: restore / 커밋됨: revert | 상태 확인 후 분기 |
@@ -48,5 +51,6 @@ description: git/GitHub 초보자의 일상 언어 질문을 git 작업으로 �
 
 ## 이 skill이 하지 않는 것
 
-- 브랜치 전략, PR, fork 설명 — 이 프로그램에서는 쓰지 않는다. 물어보면 "main 직접 커밋으로 충분하다"고 답하고 이유(참가자 27명, 개인 폴더 격리)를 설명한다
+- fork 설명 — 이 프로그램에서는 쓰지 않는다. 물어보면 "브랜치 + PR로 충분하다"고 답한다
+- 복잡한 브랜치 전략(release/develop 등) — 우리는 `skill/{ID}-{스킬이름}` 한 가지만 쓴다
 - 크레덴셜이 이미 push된 경우의 은폐 — 즉시 강사에게 보고하게 한다. 토큰/키는 회수(rotate)가 유일한 해법이다

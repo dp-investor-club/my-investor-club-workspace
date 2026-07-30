@@ -1,41 +1,48 @@
 ---
 name: club-archive
-description: 클럽이 올린 강의 자료·주차 원본을 필요할 때 불러온다. 결석/복습용 레퍼런스. "강의 자료", "지난 강의", "강의록", "club-archive", "이번 주 자료" 요청에 사용.
+description: 클럽이 올린 주차 자료를 찾아 읽는다. 자료는 이 레포 `club/week-0N/` 안에 이미 있다. "강의 자료", "지난 강의", "강의록", "club-archive", "이번 주 자료" 요청에 사용.
 ---
 
-# Club Archive — 클럽 자료 불러오기 (레퍼런스)
+# Club Archive — 클럽 주차 자료 찾기
 
-클럽은 강의 원본·주차 자료를 별도 창고(`club-materials` 브랜치)에 올린다. 이 스킬은 그것을 **필요할 때만** 불러온다.
+클럽 자료는 **이미 이 레포 안에** 있다: `club/week-0N/`. 예전처럼 다른 브랜치에서 받아올 필요가 없다.
 
-## 원칙 (반드시 지킨다)
-
-- 이건 **레퍼런스**다 — 복습·결석 보충용. 학생은 강의를 듣고 **자기 언어로** 요지를 자기 `weeks/week-0N/`에 직접 정리해야 하며, 이 원본을 그대로 복사해 넣지 않는다.
-- 불러온 원본은 참가자의 판단 자산(`CLAUDE.md`/`context.md`/`journey.md`)과 섞지 않는다. 임시로 볼 때는 `_club-archive/`(gitignore 대상)에 받는다.
-
-## 자료 위치
-
-기본 URL:
 ```
-https://raw.githubusercontent.com/dp-investor-club/my-investor-club-workspace/club-materials/
-```
-
-목록·구조 확인:
-```
-https://github.com/dp-investor-club/my-investor-club-workspace/tree/club-materials/lectures
+club/week-0N/
+  materials/     그 주 AI Intensive 자료 · 강의 슬라이드
+  lectures/      그 주 강연 내용
+  submissions/   클럽 자산으로 올라온 사례
+  sources/       참고 자료 · 개념 카드
 ```
 
 ## 절차
 
-1. 참가자가 원하는 주차를 확인한다 (없으면 "몇 주차 자료가 필요하세요?"). 모르면 위 tree URL을 WebFetch로 읽어 있는 목록을 보여준다.
-2. 해당 파일을 받는다 — 예: Week 1 강의 원본
-   ```
-   curl -fsSL -o _club-archive/week-01/ic_week1_full_v1.html \
-     https://raw.githubusercontent.com/dp-investor-club/my-investor-club-workspace/club-materials/lectures/week-01/ic_week1_full_v1.html
-   ```
-   (먼저 `mkdir -p _club-archive/week-01`)
-3. 참가자가 원하면 그 자료의 **요지를 뽑아** 설명하되, "자기 언어로 `weeks/week-0N/`에 정리해보세요 — 그게 복습입니다"라고 안내한다.
-4. `.gitignore`에 `_club-archive/`가 없으면 추가를 제안한다 (레퍼런스는 내 레포에 커밋하지 않는다).
+1. 참가자가 원하는 주차를 확인한다 (없으면 "몇 주차 자료가 필요하세요?").
+2. `club/week-0N/README.md` 를 먼저 읽는다 — 그 주에 실제로 무엇이 있는지 4칸 표로 적혀 있다.
+3. 해당 파일을 읽어 **요지를 뽑아** 설명한다. 슬라이드 html은 길기 때문에 통째로 출력하지 말고 필요한 부분만 짚는다.
+4. 끝에 안내한다: **"자기 언어로 `weeks/week-0N/`에 정리해보세요 — 그게 복습입니다."**
 
-## 막힐 때
+## 자료가 없을 때
 
-브라우저에서 직접 보기: `https://github.com/dp-investor-club/my-investor-club-workspace/tree/club-materials/lectures`
+`README.md`에 "없음"으로 적혀 있으면 클럽이 아직 올리지 않은 것이다. 이때:
+
+```
+/update
+```
+
+를 먼저 실행해 최신 `club/` 을 받는다. 받은 뒤에도 없으면 클럽에 아직 없는 것이니 `#질문과답변` 에 물으라고 안내한다.
+
+## 원칙 (반드시 지킨다)
+
+- **`club/` 은 읽기전용이다.** 읽고 설명하되 수정하지 않는다. 참가자가 고치려 하면 `weeks/week-0N/` 로 옮기게 안내한다.
+- **원본을 `weeks/` 에 복사하지 않는다.** 원본은 `club/` 에 이미 있고, 복사하면 같은 파일이 둘이 되어 어느 쪽이 최신인지 모르게 된다. `weeks/` 에는 **자기 언어로 다시 쓴 것만** 남긴다.
+- 클럽 자료를 참가자의 판단 자산(`CLAUDE.md`/`context.md`/`journey.md`)에 그대로 섞지 않는다.
+
+## 자료를 AI에게 읽히는 방법 (참가자에게 알려줄 것)
+
+같은 레포 안에 있으니 그냥 물어보면 된다:
+
+```
+club/week-03/materials 읽고, 내 병목 문장이랑 어긋나는 데 있는지 봐줘
+club/week-01/sources 에서 git 개념만 다시 설명해줘
+```

@@ -5,12 +5,14 @@ week1-onboarding
 prep-week2
 week2
 week3
+week4
 clarify
 update
 club-archive
 context-layer-builder
 mechanism-question-builder
 harness-check
+skill-tuneup
 submit
 github-helper
 session-wrap
