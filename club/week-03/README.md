@@ -12,7 +12,7 @@
 
 | 칸 | 내용 |
 |---|---|
-| `materials/` | 없음 |
+| `materials/` | `ic_week3_full_deck.html` — 3회차 발표 덱 48장 전체 |
 | `lectures/` | 없음 |
 | `submissions/` | 없음 |
 | `sources/` | 없음 |
