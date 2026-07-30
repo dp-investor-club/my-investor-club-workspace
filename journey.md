@@ -48,6 +48,11 @@
 - 7/20: weekly-check 스킬을 만들고, 거시·금리 환경(한국은행·연준 기준금리)을 확인해 outputs/weekly-check-2026-07-20.md로 남기고 context.md 소스 이력에 반영했다
 
 - (2026-07-23) 내 병목: weekly-check에 어떤 정보를 더 가져와야 도움이 될지 판단이 안 서는 내 막막함
+- (2026-07-25) 내 병목: 사실·수치 확인과 그걸 글로 풀어내는 게 빨리 안 되는 내 막막함
+
+### 2026-07-25 세션
+- 한 것: Week3 Block1~2 — 병목 문장 확정 후, 짝과의 논의를 반영해 크립토 대신 대체투자 주제로 blog-write 스킬을 새로 짓고 실행. Notion 글감 저장소에서 "PE 비즈니스 모델" 주제를 골라 사실·수치 9건을 전부 WebSearch 교차 검색으로 재확인한 뒤 outputs/blog-drafts/pe-alpha-2026-07-25.md로 저장
+- 보강: Asset Log 시리즈와 이 레포 blog-write 파이프라인 통합 정리
 
 ### 2026-07-23 세션
 - 한 것: weekly-check를 FRED·CoinGecko API 기반으로 고도화(거시·유동성·거래량·전주 대비 변동률), /update로 클럽 최신 스킬(week3·session-wrap) 설치, Week3 Block1 병목 문장 확정
