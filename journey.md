@@ -40,3 +40,4 @@
 ### 2026-07-30 세션
 - 한 것: macro-check 스킬 점검·수리(기준금리 소스 교체), 실제 실행 확인, PR 준비
 - 보강: MCP 연결로 자동화 시스템을 만들어보고 싶다
+- (2026-07-30) 내 스킬 PR: https://github.com/dp-investor-club/my-investor-club-workspace/pull/10
