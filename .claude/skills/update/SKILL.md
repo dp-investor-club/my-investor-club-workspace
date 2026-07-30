@@ -39,6 +39,17 @@ description: 클럽이 새로 올린 스킬(예: week2, clarify)을 내 작업�
 
 4. 끝나면 보고한다: **받은 스킬 목록 / 새로 생긴 것 / 갱신된 것**. 그리고 새 스킬을 어떻게 쓰는지 한 줄씩 안내한다 (예: "`/week2` 로 이번 주 실습 시작").
 
+## 동료 스킬 받기 (Week 4부터, 선택)
+
+동료가 PR로 올린 스킬은 템플릿의 `peer-skills/` 아래에 `peer-{ID}-{스킬이름}/` 형태로 들어온다. **manifest(`club-skills.txt`)에는 없다** — 클럽 스킬이 아니므로 자동으로 받지 않는다.
+
+참가자가 "누구 스킬 받아줘" / "동료 스킬 보여줘"라고 하면:
+
+1. 템플릿의 `peer-skills/` 목록을 보여준다(`git/trees/main?recursive=1` 에서 `peer-skills/` 로 시작하는 경로).
+2. 참가자가 고른 것만 받아 **`.claude/skills/peer-{ID}-{스킬이름}/`** 에 저장한다 — 이름에 `peer-` 접두어를 유지해 **내 스킬과 절대 섞이지 않게** 한다.
+3. 받은 뒤 그 SKILL.md 맨 위 "이 스킬은" 4줄을 읽어주고, 거기 적힌 "설치 후 첫 실행" 한 줄을 그대로 실행해본다.
+4. 안 되면 그게 데이터다 — 어디서 막혔는지 한 줄로 정리해 원저자에게 전달할 수 있게 남긴다. 남의 스킬을 대신 고치지 않는다.
+
 ## 막힐 때
 
 브라우저에서 최신 스킬 확인: `https://github.com/dp-investor-club/my-investor-club-workspace/tree/main/.claude/skills`

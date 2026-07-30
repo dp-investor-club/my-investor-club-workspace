@@ -36,18 +36,25 @@ description: 과제 제출 절차 — 워크스페이스 정리, 크레덴셜 �
 
 ## Step 3 — Pull & Push
 
-27명이 한 레포를 쓰므로 push 전 동기화가 필수다.
+기본은 **브랜치 + PR**이다. 27명이 한 레포를 쓰므로 main에 직접 쓰지 않는다.
 
-1. `git pull --rebase origin main`
-2. **충돌 발생 시**: 중단하고 충돌 파일을 보고한다. 충돌이 본인 폴더 내 파일이면 해결을 도와주고, 타인 폴더면 `git rebase --abort` 후 강사 호출을 안내한다
-3. `git push origin main`
-4. push 실패 시 에러를 그대로 보여주고 `/github-helper` 절차로 전환한다
+1. 지금 main에 있으면 브랜치를 만든다: `git checkout -b skill/{ID}-{스킬이름}`
+   (예: `skill/hong-gildong-check-in`. 이미 그 브랜치에 있으면 그대로 진행)
+2. **PR로 보낼 사본을 만든다** — `.claude/skills/{스킬이름}/` 를 `peer-skills/peer-{ID}-{스킬이름}/` 로 복사한다.
+   이유: 27명이 같은 레포에 올리므로 `check-in` 같은 흔한 이름이 서로 충돌한다. 내 로컬 원본(`.claude/skills/`)은 그대로 두고 사본만 올린다. 커밋 대상은 `peer-skills/` 아래만이다.
+3. `git push -u origin skill/{ID}-{스킬이름}`
+4. PR을 만든다 — `gh` CLI가 있으면 `gh pr create --fill`, 없으면 push 결과에 나온 **Create a pull request 링크를 그대로 열어** 제목/본문을 채운다.
+   PR 본문 4줄: 어떤 병목을 푸는 스킬인지 / 입력과 남는 것 / 설치 후 첫 실행 한 줄 / 아직 안 되는 것
+5. push 실패 시 에러를 그대로 보여주고 `/github-helper` 절차로 전환한다.
+6. **머지된 뒤** 내 로컬을 맞춘다: `git checkout main` → `git pull origin main`
+
+브랜치를 쓰므로 남의 파일과 충돌할 일은 거의 없다. 그래도 rebase 충돌이 나면 본인 폴더 내 파일이면 해결을 돕고, 타인 파일이면 `git rebase --abort` 후 강사를 호출한다.
 
 ## Step 4 — Slack 제출 문안 생성
 
 push 성공 후, `templates/slack-submission-week1.md` 형식(해당 주차 템플릿)으로 제출 문안을 생성해 **복사 가능한 코드 블록**으로 출력한다. 자동 발송하지 않는다 — 참가자가 직접 #과제제출 채널에 붙여넣는다.
 
-문안에 반드시 포함: 이름/ID, 주차, 산출물 경로, 질문 v2 한 줄, 이번 주 가장 큰 unknown 한 줄, commit hash.
+문안에 반드시 포함: 이름/ID, 주차, 산출물 경로, 질문 v2 한 줄, 이번 주 가장 큰 unknown 한 줄, commit hash. **PR을 만든 주차는 PR 링크도 포함한다.**
 
 ## 에러 처리 요약
 
