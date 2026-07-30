@@ -17,6 +17,8 @@
 | `submissions/` | 없음 |
 | `sources/` | 없음 |
 
+칸의 뜻: `materials/` 그 주 AI Intensive 자료·강의 슬라이드 · `lectures/` 강연·멘토링 내용 · `submissions/` 그 주 학생·팀 과제 · `sources/` 참고 자료·개념 카드·양식
+
 "없음"은 아직 클럽이 안 올렸다는 뜻입니다. `/update` 를 실행하면 최신으로 갱신됩니다.
 
 ## 내 것은 어디에
