@@ -3,3 +3,7 @@
 *.key
 _club-archive/
 *.bak
+.mcp.json
+*token*
+scripts/
+__pycache__/
