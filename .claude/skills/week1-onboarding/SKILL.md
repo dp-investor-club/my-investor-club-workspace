@@ -65,7 +65,7 @@ description: Week 1 온보딩 = 첫 수업 복습 리플레이 × Claude Code �
 |---|---|---|
 | 0 | Setup | 설치 + 로그인 |
 | 1 | 왜 터미널인가 | (수업 복습 퀴즈) |
-| 2 | 위임 | `weeks/` 강의안 서랍 |
+| 2 | 위임 | `weeks/week-01` 내 개념정리 |
 | 3 | 대화 | journey.md 1주차 기록 |
 | 4 | 모드 | plan mode 경험 |
 | 5 | 나의 CLAUDE.md 채우기 | 나에게 맞춰진 CLAUDE.md |
