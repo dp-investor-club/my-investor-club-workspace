@@ -5,5 +5,9 @@ _club-archive/
 *.bak
 .mcp.json
 *token*
-scripts/
+
+# 레포 루트의 운영 스크립트만 제외한다.
+# 앞의 / 가 없으면 .claude/skills/*/scripts/ 와 peer-skills/*/scripts/ 까지
+# 함께 무시되어, 참가자가 만든 스킬의 실행 스크립트가 PR에서 조용히 빠진다.
+/scripts/
 __pycache__/
