@@ -5,5 +5,5 @@ _club-archive/
 *.bak
 .mcp.json
 *token*
-/scripts/
+scripts/
 __pycache__/

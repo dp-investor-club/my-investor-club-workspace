@@ -70,13 +70,8 @@ description: 클럽이 새로 올린 스킬(예: week2, clarify)을 내 작업�
 
 참가자가 "누구 스킬 받아줘" / "동료 스킬 보여줘"라고 하면:
 
-0. **먼저 `peer-skills/INDEX.md` 를 받아서 보여준다** — 폴더 이름만 나열하면 무엇을 고를지 알 수 없다. 이 카탈로그는 각 스킬이 **어떤 병목을 푸는지·첫 실행 한 줄·받기 전에 준비할 것**을 병목별로 묶어 놓았다.
-   ```
-   curl -fsSL https://raw.githubusercontent.com/dp-investor-club/my-investor-club-workspace/main/peer-skills/INDEX.md
-   ```
-   참가자가 무엇을 받을지 고민하면 **폴더 이름이 아니라 지금 막혀 있는 것**을 묻고, 같은 병목 줄을 가리켜 준다.
-1. 템플릿의 `peer-skills/` 목록으로 실제 존재를 확인한다(`git/trees/main?recursive=1` 에서 `peer-skills/` 로 시작하는 경로).
-2. 참가자가 고른 것만 받아 **`.claude/skills/peer-{ID}-{스킬이름}/`** 에 저장한다 — 폴더 안 파일 전체(`references/`·`scripts/`·`agents/`·`data/` 포함)를 받아야 하며, 이름에 `peer-` 접두어를 유지해 **내 스킬과 절대 섞이지 않게** 한다.
+1. 템플릿의 `peer-skills/` 목록을 보여준다(`git/trees/main?recursive=1` 에서 `peer-skills/` 로 시작하는 경로).
+2. 참가자가 고른 것만 받아 **`.claude/skills/peer-{ID}-{스킬이름}/`** 에 저장한다 — 이름에 `peer-` 접두어를 유지해 **내 스킬과 절대 섞이지 않게** 한다.
 3. 받은 뒤 그 SKILL.md 맨 위 "이 스킬은" 4줄을 읽어주고, 거기 적힌 "설치 후 첫 실행" 한 줄을 그대로 실행해본다.
 4. 안 되면 그게 데이터다 — 어디서 막혔는지 한 줄로 정리해 원저자에게 전달할 수 있게 남긴다. 남의 스킬을 대신 고치지 않는다.
 
