@@ -3,6 +3,7 @@
   실제 스캔을 리포트로 만들 때, 이 구조와 CSS를 그대로 재사용하고
   <!-- {{...}} --> 자리만 그 스캔의 실제 내용으로 채운다.
   라벨 색상: 1차=파랑, 2차=회색, 추정=주황. 판단/전망 문구는 절대 넣지 않는다.
+  claim-card에는 그 카드의 라벨과 같은 data-tag(p1/p2/est)를 넣어 왼쪽 색띠가 라벨과 맞물리게 한다.
 -->
 <!doctype html>
 <html lang="ko">
@@ -13,19 +14,21 @@
 <style>
   :root {
     color-scheme: light dark;
-    --fg: #17181c; --bg: #fbfbfc; --surface: #ffffff;
-    --muted: #6b7076; --border: #e6e7ea; --accent: #3357e0; --accent-soft: #eef1fd;
-    --tag-1: #2563eb; --tag-1-bg: #e8edfd;
-    --tag-2: #6b7076; --tag-2-bg: #eef0f2;
-    --tag-est: #b45309; --tag-est-bg: #fdf3e3;
+    --fg: #14161b; --bg: #ffffff; --surface: #ffffff;
+    --muted: #5b6169; --border: #e8eaef; --accent: #2f6fed; --accent-soft: #eaf1ff;
+    --tag-1: #2f6fed; --tag-1-bg: #e7f0ff;
+    --tag-2: #5b6169; --tag-2-bg: #eef0f3;
+    --tag-est: #d97706; --tag-est-bg: #fef3e2;
+    --shadow: 0 1px 2px rgba(20,22,27,0.05), 0 8px 20px rgba(20,22,27,0.06);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --fg: #eceef1; --bg: #101114; --surface: #17181d;
-      --muted: #9297a1; --border: #2a2c32; --accent: #7c96ff; --accent-soft: #1b2036;
-      --tag-1: #8fa6ff; --tag-1-bg: #1c2340;
-      --tag-2: #9297a1; --tag-2-bg: #23252b;
-      --tag-est: #e2a94f; --tag-est-bg: #2c2313;
+      --fg: #f0f1f4; --bg: #0e0f12; --surface: #17181e;
+      --muted: #a3a8b1; --border: #2b2d34; --accent: #86a6ff; --accent-soft: #1c2440;
+      --tag-1: #86a6ff; --tag-1-bg: #1e2748;
+      --tag-2: #a3a8b1; --tag-2-bg: #24262d;
+      --tag-est: #f0ac52; --tag-est-bg: #302410;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 20px rgba(0,0,0,0.35);
     }
   }
   * { box-sizing: border-box; }
@@ -35,23 +38,29 @@
     line-height: 1.7; -webkit-font-smoothing: antialiased;
   }
   main { max-width: 720px; margin: 0 auto; padding: 3rem 1.4rem 5rem; }
-  h1 { font-size: 1.5rem; margin: 0 0 0.3rem; letter-spacing: -0.01em; }
+  h1 { font-size: 1.6rem; margin: 0 0 0.3rem; letter-spacing: -0.015em; font-weight: 700; }
   .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 2rem; }
   section { margin-top: 2.4rem; }
-  h2 { font-size: 1.1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+  h2 { font-size: 1.05rem; border-bottom: 1px solid var(--border); padding-bottom: 0.45rem; }
   .synthesis {
-    background: var(--accent-soft); border-radius: 10px; padding: 1.1rem 1.3rem;
+    background: linear-gradient(135deg, var(--accent-soft), transparent 120%), var(--accent-soft);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px; padding: 1.15rem 1.35rem;
     font-size: 0.98rem;
   }
   .claim-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--border);
+    border-radius: 10px; box-shadow: var(--shadow);
     padding: 1.1rem 1.3rem; margin-bottom: 0.9rem;
   }
+  .claim-card[data-tag="p1"] { border-left-color: var(--tag-1); }
+  .claim-card[data-tag="p2"] { border-left-color: var(--tag-2); }
+  .claim-card[data-tag="est"] { border-left-color: var(--tag-est); }
   .claim-text { font-weight: 600; margin: 0 0 0.5rem; }
   .plain { color: var(--muted); font-size: 0.92rem; margin: 0.4rem 0; }
-  .plain::before { content: "쉽게 말하면 — "; color: var(--fg); font-weight: 600; }
   .src-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; font-size: 0.8rem; color: var(--muted); }
-  .tag { border-radius: 999px; padding: 0.15rem 0.6rem; font-weight: 600; font-size: 0.75rem; }
+  .tag { border-radius: 999px; padding: 0.15rem 0.6rem; font-weight: 700; font-size: 0.75rem; }
   .tag.p1 { color: var(--tag-1); background: var(--tag-1-bg); }
   .tag.p2 { color: var(--tag-2); background: var(--tag-2-bg); }
   .tag.est { color: var(--tag-est); background: var(--tag-est-bg); }
@@ -75,8 +84,8 @@
 
   <section>
     <h2>핵심 주장</h2>
-    <!-- 주장마다 하나씩 반복 -->
-    <div class="claim-card">
+    <!-- 주장마다 하나씩 반복. data-tag는 아래 .tag의 클래스(p1/p2/est)와 동일하게 맞춘다 -->
+    <div class="claim-card" data-tag="p1">
       <p class="claim-text"><!-- {{주장 — 수치·핵심 내용}} --></p>
       <p class="plain"><!-- {{용어·약어 풀이 + 배경 맥락. 전망/판단 금지}} --></p>
       <div class="src-row">
