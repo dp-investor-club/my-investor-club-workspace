@@ -1,6 +1,6 @@
 ---
 name: blog-write
-description: Notion에 쌓아둔 글감(주제 저장소)에서 이번에 쓸 주제를 골라 경제 블로그 초안 골격을 작성하고, 본문에 들어간 모든 사실·수치 주장을 AI가 직접 재확인(self-verification)한 뒤 outputs/blog-drafts/{슬러그}-YYYY-MM-DD.md로 남긴다. 투자 조언·발행은 하지 않는다. "블로그 초안", "블로그 글 써줘", "blog-write", "노션 주제로 글 써줘" 요청에 사용.
+description: Notion에 쌓아둔 글감(주제 저장소)에서 이번에 쓸 주제를 골라 경제 블로그 초안 골격을 작성하거나, 기존에 쓴 글을 Asset Log 문체로 재작성한다. 본문에 들어간 모든 사실·수치 주장을 AI가 직접 재확인(self-verification)한 뒤 outputs/blog-drafts/{슬러그}-YYYY-MM-DD.md로 남긴다. 투자 조언·발행은 하지 않는다. "블로그 초안", "블로그 글 써줘", "blog-write", "노션 주제로 글 써줘", "이 글 Asset Log 문체로 바꿔줘" 요청에 사용.
 ---
 
 ## 이 스킬은
