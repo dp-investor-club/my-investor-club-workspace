@@ -63,7 +63,7 @@ description: 국내 PE/VC 업계 뉴스를 더벨·딜사이트·인베스트조
    tags: [daily-brief, PE, VC]
    date: YYYY-MM-DD
    sources: [실제로 기사를 가져온 매체만 나열 — 예: 더벨, 딜사이트]
-   count: 실제로 담은 건수
+   count: 실제로 담은 건수 (3단계에서 병합된 딜은 매체 수와 무관하게 1건으로 센다)
    ---
    ```
 
