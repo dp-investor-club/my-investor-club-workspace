@@ -7,7 +7,7 @@ description: 국내 PE/VC 업계 뉴스를 더벨·딜사이트·인베스트조
 - 어떤 병목: PE/VC 업계 뉴스가 매체마다 흩어져 있어 매일 챙겨 읽고 정리할 시간이 없다
 - 입력 → 남는 것: "pe-vc-daily" 요청 → `sources/pe-vc-daily/`에 날짜별 브리핑 노트(오늘자 관련 기사 요약 + 출처라벨 + 회사/펀드 위키링크) + 브라우저로 보는 index.html
 - 설치 후 첫 실행: "pe-vc-daily" (별도 설정 없이 바로 실행 가능)
-- 아직 안 되는 것: 아직 모름
+- 아직 안 되는 것: 매체 간 중복 딜 병합 판단은 AI의 해석에 의존해 케이스마다 결과가 조금 다를 수 있음(기준은 최대한 구체화했지만 완전히 결정론적이진 않음). 오늘 하루치 수집 안에서의 중복만 다루고, 전날 브리핑과의 병합은 안 함. 마켓인사이트는 PE/VC 전용 카테고리가 없어 관련성 낮은 기사가 섞일 수 있음
 
 # pe-vc-daily — 국내 PE/VC 데일리 브리핑
 
@@ -30,14 +30,14 @@ description: 국내 PE/VC 업계 뉴스를 더벨·딜사이트·인베스트조
 
 | 매체 | 목록 URL | 비고 |
 |---|---|---|
-| 블로터 | `https://www.bloter.net` | 목록 URL 미확인 — 실제로 이 소스를 쓸 때 카테고리 진입 경로를 확인해 이 표에 채운다 |
-| 뉴스톱(더비스타) | `https://www.newstopkorea.com` | 목록 URL 미확인 — 위와 동일 |
+| 블로터 | `https://www.bloter.net/news/articleList.html?sc_section_code=S1N11&view_type=sm` | IB 섹션(M&A·PE·VC 다 포함, 2026-08-05 확인). 더 좁히려면 하위 코드: PE=`sc_sub_section_code=S2N50`, VC=`S2N51`, M&A=`S2N49` |
+| 뉴스톱(더비스타) | `https://www.newstopkorea.com/news/articleList.html?sc_sub_section_code=S2N2&sc_section_code=S1N44&view_type=sm` | 더비스타 Venture Capital 섹션(2026-08-05 확인). Private Equity 섹션은 `sc_sub_section_code=S2N1` |
 
 *참고 — 필요할 때만, 매번 확인하지 않음:*
 
 | 매체 | 목록 URL | 비고 |
 |---|---|---|
-| 한국경제 마켓인사이트 | `https://marketinsight.hankyung.com` | 목록 URL 미확인 |
+| 한국경제 마켓인사이트 | `https://marketinsight.hankyung.com` | PE/VC 전용 카테고리 없음 — 세분화된 카테고리는 로그인/유료 전용으로 보임(2026-08-05 확인). FREE NEWS 목록 그대로 쓰고 관련성으로 걸러야 함 |
 
 *해외 — 참가자가 명시적으로 해외 소식을 요청할 때만:*
 
