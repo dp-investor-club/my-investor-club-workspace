@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PE/VC 데일리 — 준하의 리서치 노트</title>
+<style>
+  :root {
+    --bg: #f3efe8;
+    --card-bg: #ffffff;
+    --text: #22262b;
+    --muted: #6b6f76;
+    --accent: #8a1f2d;
+    --border: #e4ded4;
+    --tag1-bg: #e6f4ea; --tag1-text: #1f7a4d; --tag1-line: #1f7a4d;
+    --tag2-bg: #eef2f7; --tag2-text: #2b5a8c; --tag2-line: #2b5a8c;
+    --tag-est-bg: #f3eefc; --tag-est-text: #6b46a3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px 80px; }
+
+  header.hero {
+    background: linear-gradient(135deg, #1f2430 0%, #3a2230 100%);
+    color: #f4f1ea;
+    margin: 0 0 36px;
+    padding: 44px 24px;
+  }
+  header.hero .inner { max-width: 980px; margin: 0 auto; }
+  header.hero h1 { font-size: 1.55rem; margin: 0 0 10px; }
+  header.hero p.overview { color: #cfc9bd; font-size: 0.92rem; max-width: 700px; margin: 0 0 20px; }
+  .stat-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stat-pill {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    color: #f4f1ea;
+  }
+  .stat-pill b { color: #fff; }
+
+  h2.section-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2.section-title::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    margin-bottom: 44px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border-left: 4px solid var(--tag2-line);
+    box-shadow: 0 1px 3px rgba(30,20,10,0.08), 0 1px 2px rgba(30,20,10,0.04);
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card.label-1 { border-left-color: var(--tag1-line); }
+  .card.label-est { border-left-color: var(--tag-est-text); }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 10px;
+  }
+  .tag-1 { background: var(--tag1-bg); color: var(--tag1-text); }
+  .tag-2 { background: var(--tag2-bg); color: var(--tag2-text); }
+  .tag-est { background: var(--tag-est-bg); color: var(--tag-est-text); }
+
+  .card h3 { font-size: 1rem; margin: 0; line-height: 1.4; }
+  .card h3 a { color: var(--text); text-decoration: none; }
+  .card h3 a:hover { color: var(--accent); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    background: #f1eee7;
+    color: #4a4640;
+    font-size: 0.74rem;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+
+  .card .source { color: var(--muted); font-size: 0.78rem; margin: 0; }
+
+  details.summary-toggle summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-size: 0.82rem;
+    font-weight: 600;
+    list-style: none;
+  }
+  details.summary-toggle summary::-webkit-details-marker { display: none; }
+  details.summary-toggle summary::before { content: "+ "; }
+  details.summary-toggle[open] summary::before { content: "− "; }
+  details.summary-toggle p { margin: 10px 0 0; font-size: 0.9rem; }
+
+  .card-foot { margin-top: auto; padding-top: 4px; }
+  .orig-btn {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 4px 10px;
+  }
+  .orig-btn:hover { background: var(--accent); color: #fff; }
+
+  section#archive { padding: 0 24px; }
+  details.archive-day {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: var(--card-bg);
+    overflow: hidden;
+  }
+  details.archive-day summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  details.archive-day summary::-webkit-details-marker { display: none; }
+  details.archive-day summary::before { content: "▸"; color: var(--accent); }
+  details.archive-day[open] summary::before { content: "▾"; }
+  details.archive-day .grid { padding: 0 18px 18px; margin-bottom: 0; }
+
+  .empty-note {
+    color: var(--muted);
+    font-size: 0.9rem;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 0 24px 44px;
+  }
+
+  footer.note {
+    margin: 20px 24px 0;
+    color: var(--muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="inner">
+      <h1>PE/VC 데일리 — 준하의 리서치 노트</h1>
+      <p class="overview"><code>pe-vc-daily</code> 스킬이 매일 더벨·딜사이트·인베스트조선·서울경제 시그널에서 국내 PE/VC 뉴스를 모아 정리합니다. 모든 수치·주장에는 출처 신뢰도 라벨을 표시하며, 투자 조언이 아닌 기록·정리 목적입니다.</p>
+      <div class="stat-row">
+        <span class="stat-pill">📅 <b>2026-07-30</b></span>
+        <span class="stat-pill"><b>8건</b> 관련 기사</span>
+        <span class="stat-pill">2개 매체 · 더벨 6 · 인베스트조선 2</span>
+        <span class="stat-pill"><span class="tag tag-1">1차</span> 2 · <span class="tag tag-2">2차</span> 6</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section id="latest">
+      <h2 class="section-title">오늘의 브리핑</h2>
+      <div class="grid">
+
+        <article class="card label-2">
+          <span class="tag tag-2">2차</span>
+          <h3><a href="https://www.thebell.co.kr/front/newsview.asp?code=00&amp;key=202607300820072040108161" target="_blank" rel="noopener">롯데손보 수의계약 불발, 신한지주-JKL 간극 벌린 쟁점은</a></h3>
+          <div class="chips"><span class="chip">신한금융지주</span><span class="chip">JKL파트너스</span><span class="chip">롯데손해보험</span></div>
+          <p class="source">더벨 · 2026-07-30 · 유료 구독, 리드문만 확인</p>
+          <details class="summary-toggle"><summary>요약 보기</summary>
+            <p>매각 수의계약 협상 중단. 구주 가격 차이 약 3,000억원(JKL 측 1조원대 고수). 기준금리 상승에 따른 재무건전성 개선과 기존 투자자 회수 조건, 경영개선계획안 공유 시점 이견이 배경. 향후 재개 여부 unknown.</p>
+          </details>
+          <div class="card-foot"><a class="orig-btn" href="https://www.thebell.co.kr/front/newsview.asp?code=00&amp;key=202607300820072040108161" target="_blank" rel="noopener">원문 보기 →</a></div>
+        </article>
+
+        <article class="card label-2">
+          <span class="tag tag-2">2차</span>
+          <h3><a href="https://www.thebell.co.kr/front/newsview.asp?code=00&amp;key=202607291431023560107419" target="_blank" rel="noopener">매니저 프로파일 | 에이벤처스 — 딥테크 병목에 초기 베팅</a></h3>
+          <div class="chips"><span class="chip">에이벤처스</span></div>
+          <p class="source">더벨 · 2026-07-30 · 유료 구독, 리드문만 확인</p>
+          <details class="summary-toggle"><summary>요약 보기</summary>
+            <p>정진이 이사(변리사 출신) — "독자 기술로 병목을 뚫을 기업 발굴, 후속 투자로 함께 성장" 전략. 구체적 투자 건·금액·포트폴리오사명 unknown(유료 구간).</p>
+          </details>
+          <div class="card-foot"><a class="orig-btn" href="https://www.thebell.co.kr/front/newsview.asp?code=00&amp;key=202607291431023560107419" target="_blank" rel="noopener">원문 보기 →</a></div>
+        </article>
+
+        <article class="card label-2">
+          <span class="tag tag-2">2차</span>
+          <h3><a href="https://www.thebell.co.kr/front/newsview.asp?code=00&amp;key=202607300753401260101672" target="_blank" rel="noopener">EQT, KKR 한·일 탱크터미널 인수전서 이탈</a></h3>
+          <div class="chips"><span class="chip">EQT파트너스</span><span class="chip">KKR</span><span class="chip">액티스</span><span class="chip">베인캐피탈</span><span class="chip">MBK파트너스</span></div>
+          <p class="source">더벨 · 2026-07-30 · 유료 구독, 리드문만 확인</p>
+          <details class="summary-toggle"><summary>요약 보기</summary>
+            <p>EQT가 KKR 보유 한·일 탱크터미널 인수 검토 중단 — 투자전략·매물 성격 불일치. 경쟁 후보(액티스·베인캐피탈·MBK)는 실사 계속. 거래 규모 unknown(유료 구간).</p>
+          </details>
+          <div class="card-foot"><a class="orig-btn" href="https://www.thebell.co.kr/front/newsview.asp?code=00&amp;key=202607300753401260101672" target="_blank" rel="noopener">원문 보기 →</a></div>
+        </article>
+
+        <article class="card label-2">
+          <span class="tag tag-2">2차</span>
+          <h3><a href="https://www.thebell.co.kr/front/newsview.asp?code=00&amp;key=202607300749101520103987" target="_blank" rel="noopener">SK오션플랜트, 8월 SPA '기대'…우협 한 번 더 연장될 듯</a></h3>
+          <div class="chips"><span class="chip">SK오션플랜트</span><span class="chip">디오션자산운용</span><span class="chip">오성첨단소재</span></div>
+          <p class="source">더벨 · 2026-07-30 · 유료 구독, 리드문만 확인</p>
+          <details class="summary-toggle"><summary>요약 보기</summary>
+            <p>SPA 체결 막바지 협상, 우협(디오션자산운용 컨소시엄, 오성첨단소재 전략적투자자 복귀) 지위 한 차례 더 연장 전망. 본계약 직전 절차라는 평가. 거래금액 unknown(유료 구간).</p>
+          </details>
+          <div class="card-foot"><a class="orig-btn" href="https://www.thebell.co.kr/front/newsview.asp?code=00&amp;key=202607300749101520103987" target="_blank" rel="noopener">원문 보기 →</a></div>
+        </article>
+
+        <article class="card label-2">
+          <span class="tag tag-2">2차</span>
+          <h3><a href="https://www.thebell.co.kr/front/newsview.asp?code=00&amp;key=202607291415383400106124" target="_blank" rel="noopener">SK디앤디, 1367억 유증 추진…한앤코 참여 확정</a></h3>
+          <div class="chips"><span class="chip">SK디앤디</span><span class="chip">한앤컴퍼니</span></div>
+          <p class="source">더벨 · 2026-07-30 · 유료 구독, 리드문만 확인</p>
+          <details class="summary-toggle"><summary>요약 보기</summary>
+            <p>1,367억원 주주배정 유상증자, 한앤코 참여 확정. 자금은 10월 만기 사모사채 상환·우발채무 대응. 자체개발→공동투자·위탁개발 전략 전환 중. 하반기 2,230억원 추가 조달 계획.</p>
+          </details>
+          <div class="card-foot"><a class="orig-btn" href="https://www.thebell.co.kr/front/newsview.asp?code=00&amp;key=202607291415383400106124" target="_blank" rel="noopener">원문 보기 →</a></div>
+        </article>
+
+        <article class="card label-2">
+          <span class="tag tag-2">2차</span>
+          <h3><a href="https://www.thebell.co.kr/front/newsview.asp?code=00&amp;key=202607300840287140102986" target="_blank" rel="noopener">글로벌 자문사 에버코어, 한국 사무소 문 연다</a></h3>
+          <div class="chips"><span class="chip">에버코어</span><span class="chip">모엘리스</span></div>
+          <p class="source">더벨 · 2026-07-30 · 유료 구독, 리드문만 확인</p>
+          <details class="summary-toggle"><summary>요약 보기</summary>
+            <p>2023년 무산됐던 한국 서울사무소 설립 재추진, 헤드헌팅으로 한국 대표 후보군 접촉 중. 모엘리스 관련기사 언급되나 구체 맥락 unknown(유료 구간).</p>
+          </details>
+          <div class="card-foot"><a class="orig-btn" href="https://www.thebell.co.kr/front/newsview.asp?code=00&amp;key=202607300840287140102986" target="_blank" rel="noopener">원문 보기 →</a></div>
+        </article>
+
+        <article class="card label-1">
+          <span class="tag tag-1">1차</span>
+          <h3><a href="https://www.investchosun.com/site/data/html_dir/2026/07/30/2026073080003.html" target="_blank" rel="noopener">8년 만에 다시 KAI 주주로 올라선 블랙록</a></h3>
+          <div class="chips"><span class="chip">블랙록</span><span class="chip">한국항공우주(KAI)</span><span class="chip">한화그룹</span><span class="chip">수출입은행</span></div>
+          <p class="source">인베스트조선 · 2026-07-30 · 지분 수치는 공시 기반</p>
+          <details class="summary-toggle"><summary>요약 보기</summary>
+            <p>블랙록, KAI 지분 489만2,851주(약 5.02%) 확보하며 8년 만에 주요 주주 복귀. 한화 경영권 인수에 우호적 주주 될 가능성 제기(해석 부분 [추정]). 수출입은행-한화 지분 격차 12~13%, 기업결합신고 기준 15%. 배당수익률 0.3%, 반기 영업이익 전년比 약 20%↓ 전망.</p>
+          </details>
+          <div class="card-foot"><a class="orig-btn" href="https://www.investchosun.com/site/data/html_dir/2026/07/30/2026073080003.html" target="_blank" rel="noopener">원문 보기 →</a></div>
+        </article>
+
+        <article class="card label-1">
+          <span class="tag tag-1">1차</span>
+          <h3><a href="https://www.investchosun.com/site/data/html_dir/2026/07/30/2026073080006.html" target="_blank" rel="noopener">주춤한 KB 보험사…신한, '보험 격차' 좁힐 손보 M&amp;A 셈법 복잡</a></h3>
+          <div class="chips"><span class="chip">KB금융</span><span class="chip">신한금융지주</span><span class="chip">KB손보</span><span class="chip">롯데손해보험</span></div>
+          <p class="source">인베스트조선 · 2026-07-30 · 실적발표 기반</p>
+          <details class="summary-toggle"><summary>요약 보기</summary>
+            <p>상반기 순이익 격차 4,419억원 중 보험 부문이 3,569억원(80.8%). KB손보 순익 14.2%↓로 KB도 주춤. 신한은 손보 계열사 부재로 롯데손보 등 M&amp;A 필요성 거론. CET1 13.43%. 인수가 약 1조원 거론되나 확정 아님[추정].</p>
+          </details>
+          <div class="card-foot"><a class="orig-btn" href="https://www.investchosun.com/site/data/html_dir/2026/07/30/2026073080006.html" target="_blank" rel="noopener">원문 보기 →</a></div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="archive">
+      <h2 class="section-title">아카이브</h2>
+    </section>
+    <p class="empty-note">아직 지난 날짜가 없습니다 — 내일부터 여기에 쌓입니다.</p>
+
+    <footer class="note">
+      마지막 생성: 2026-07-30 · <code>pe-vc-daily</code> 스킬이 노트 폴더의 브리핑 파일을 읽어 자동 생성 · 투자 조언 아님, 기록·정리 목적
+    </footer>
+  </div>
+</body>
+</html>
