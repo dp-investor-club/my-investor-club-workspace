@@ -3,3 +3,4 @@
 *.key
 _club-archive/
 *.bak
+.obsidian/
