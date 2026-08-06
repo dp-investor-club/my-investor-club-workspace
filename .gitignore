@@ -3,6 +3,8 @@
 *.key
 _club-archive/
 *.bak
+.vercel
+.env*
 .mcp.json
 *token*
 
