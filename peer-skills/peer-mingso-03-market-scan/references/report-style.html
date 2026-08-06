@@ -1,0 +1,124 @@
+<!--
+  market-scan 리포트 스타일 가이드.
+  실제 스캔을 리포트로 만들 때, 이 구조와 CSS를 그대로 재사용하고
+  <!-- {{...}} --> 자리만 그 스캔의 실제 내용으로 채운다.
+  라벨 색상: 1차=파랑, 2차=회색, 추정=주황. 판단/전망 문구는 절대 넣지 않는다.
+  claim-card에는 그 카드의 라벨과 같은 data-tag(p1/p2/est)를 넣어 카드 배경·왼쪽 색띠가 라벨과 맞물리게 한다.
+  "인사이트" 문단은 그 주장이 왜 중요한지/무슨 뜻인지를 2~3문장으로 풀어서 설명하는 것이지,
+  한 줄 요약이나 판단·전망이 아니다. 관련 배경, 다른 주장과의 연결, 수치가 실제로 뭘 뜻하는지까지 담는다.
+-->
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title><!-- {{산업/테마}} 스캔 — {{날짜}} --></title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --fg: #14161b; --bg: #ffffff; --surface: #ffffff;
+    --muted: #5b6169; --border: #e8eaef; --accent: #1f5eff; --accent-soft: #e8f0ff;
+    --tag-1: #1f5eff; --tag-1-bg: #e8f0ff;
+    --tag-2: #5b6169; --tag-2-bg: #eef0f3;
+    --tag-est: #ef8b00; --tag-est-bg: #fff1dd;
+    --shadow: 0 1px 2px rgba(20,22,27,0.05), 0 8px 20px rgba(20,22,27,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fg: #f0f1f4; --bg: #0e0f12; --surface: #17181e;
+      --muted: #a3a8b1; --border: #2b2d34; --accent: #7ea1ff; --accent-soft: #1c2748;
+      --tag-1: #7ea1ff; --tag-1-bg: #1e2b52;
+      --tag-2: #a3a8b1; --tag-2-bg: #24262d;
+      --tag-est: #ffb454; --tag-est-bg: #34260c;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 20px rgba(0,0,0,0.35);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", "Pretendard", sans-serif;
+    line-height: 1.7; -webkit-font-smoothing: antialiased;
+  }
+  .scan-bar { height: 5px; background: linear-gradient(90deg, var(--tag-1), var(--tag-2), var(--tag-est)); }
+  main { max-width: 720px; margin: 0 auto; padding: 3rem 1.4rem 5rem; }
+  h1 { font-size: 1.7rem; margin: 0 0 0.3rem; letter-spacing: -0.015em; font-weight: 800; }
+  .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 2rem; }
+  section { margin-top: 2.4rem; }
+  h2 { font-size: 1.05rem; border-bottom: 1px solid var(--border); padding-bottom: 0.45rem; }
+  .synthesis {
+    background: linear-gradient(135deg, var(--accent-soft), var(--tag-est-bg) 160%);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px; padding: 1.15rem 1.35rem;
+    font-size: 0.98rem;
+  }
+  .claim-card {
+    background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--border);
+    border-radius: 10px; box-shadow: var(--shadow);
+    padding: 1.1rem 1.3rem; margin-bottom: 0.9rem;
+  }
+  .claim-card[data-tag="p1"] { background: var(--tag-1-bg); border-left-color: var(--tag-1); }
+  .claim-card[data-tag="p2"] { background: var(--tag-2-bg); border-left-color: var(--tag-2); }
+  .claim-card[data-tag="est"] { background: var(--tag-est-bg); border-left-color: var(--tag-est); }
+  .claim-text { font-weight: 700; margin: 0 0 0.5rem; }
+  .plain { color: var(--fg); font-size: 0.92rem; margin: 0.5rem 0; }
+  .insight-label {
+    display: inline-block; color: var(--accent); font-weight: 800; font-size: 0.68rem;
+    letter-spacing: 0.06em; text-transform: uppercase; margin-right: 0.45rem;
+    vertical-align: 1px;
+  }
+  .src-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; font-size: 0.8rem; color: var(--muted); }
+  .tag { border-radius: 999px; padding: 0.15rem 0.6rem; font-weight: 700; font-size: 0.75rem; }
+  .tag.p1 { color: var(--tag-1); background: var(--surface); }
+  .tag.p2 { color: var(--tag-2); background: var(--surface); }
+  .tag.est { color: var(--tag-est); background: var(--surface); }
+  ul.plain-list { padding-left: 1.2rem; color: var(--muted); font-size: 0.92rem; }
+  .print-hint { margin-top: 3rem; padding-top: 1.2rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.82rem; }
+</style>
+</head>
+<body>
+<div class="scan-bar"></div>
+<main>
+  <h1><!-- {{산업/테마}} 스캔 --></h1>
+  <p class="meta"><!-- {{날짜}} · market-scan --></p>
+
+  <section>
+    <h2>종합</h2>
+    <div class="synthesis">
+      <!-- 이 스캔의 핵심 사건들이 서로 어떻게 연결되는지 서술형 한 문단.
+           예: "A가 짓겠다는 계획과 B라는 제약이 같은 시기에 나오고 있다."
+           판단·전망·추천 문구는 쓰지 않는다. -->
+    </div>
+  </section>
+
+  <section>
+    <h2>핵심 주장</h2>
+    <!-- 주장마다 하나씩 반복. data-tag는 아래 .tag의 클래스(p1/p2/est)와 동일하게 맞춘다 -->
+    <div class="claim-card" data-tag="p1">
+      <p class="claim-text"><!-- {{주장 — 수치·핵심 내용}} --></p>
+      <p class="plain"><span class="insight-label">인사이트</span><!-- {{2~3문장으로 풀어서: 이 주장이 왜 중요한지, 관련 용어·배경, 다른 주장과 어떻게 이어지는지. 짧은 한 줄 요약이 아니라 실제로 읽을 만한 분량으로. 전망/판단 금지}} --></p>
+      <div class="src-row">
+        <span class="tag p1"><!-- 1차 / 2차 / 추정 중 하나만 --></span>
+        <span><!-- {{출처}} --></span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>믿기 어려운 점 / 교차확인 안 된 것</h2>
+    <ul class="plain-list">
+      <li><!-- {{항목 — 이유}} --></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Unknowns</h2>
+    <ul class="plain-list">
+      <li><!-- {{모르는 것 — 확인 방법}} --></li>
+    </ul>
+  </section>
+
+  <p class="print-hint">이 파일은 더블클릭으로 바로 열립니다. PDF로 저장하려면 브라우저에서 열고 Cmd/Ctrl+P → PDF로 저장을 누르세요.</p>
+</main>
+</body>
+</html>
