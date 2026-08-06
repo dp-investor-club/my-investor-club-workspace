@@ -12,7 +12,7 @@
 
 | 칸 | 내용 |
 |---|---|
-| `materials/` | **1건** — `(3_DAY2) 260723_VCPE스터디.pdf` |
+| `materials/` | **2건** — `ic_week2_full_deck.html`(수업 장표) · `(3_DAY2) 260723_VCPE스터디.pdf` |
 | `lectures/` | **7건** — `3조_2차_멘토링노트_알토스벤처스_안가을_멘토님.pdf` · `DPIC_2기_멘토링요약_김현규 수석님.pdf` · `DPIC_2기_수업요약_손호준 대표님.pdf` · `DPIC_2기_수업요약_임주혁 상무님.pdf` · `DPIC_2기_수업요약_최지현 상무님.pdf` · `DPIC_2기_수업요약_한화투자증권 김수연 애널리스트님.pdf` · `IMM Credit & Solutions 이종원 이사님 멘토링 정리본.pdf` |
 | `submissions/` | **3건** — `DPIC_2기_투자강연노트_VC투자철학_손호준_대표_3조.docx` · `DPIC_2기_투자강연노트_임주혁_상무.docx` · `DP_INVESTOR_CLUB_2기_투자강연노트_VC 딜소싱 방법과 AI시대 필요 역량_최지현 상무님_2조.docx` |
 | `sources/` | 없음 |

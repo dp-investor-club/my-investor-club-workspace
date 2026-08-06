@@ -12,7 +12,7 @@
 
 | 칸 | 내용 |
 |---|---|
-| `materials/` | 없음 |
+| `materials/` | **1건** — `ic_week4_full_deck.html`(수업 발표자료) |
 | `lectures/` | 없음 |
 | `submissions/` | 없음 |
 | `sources/` | 없음 |

@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DP Investor Club — Week 4</title>
+  <style>
+    :root {
+      --ink: #111827;
+      --body: #334155;
+      --muted: #64748b;
+      --line: #cbd5e1;
+      --paper: #ffffff;
+      --panel: #f1f5f9;
+      --blue: #2563eb;
+      --blue-dark: #1d4ed8;
+      --blue-soft: #dbeafe;
+      --green: #0f766e;
+      --green-soft: #ccfbf1;
+      --orange: #c2410c;
+      --orange-soft: #ffedd5;
+      --red: #b91c1c;
+      --red-soft: #fee2e2;
+      --white: #fff;
+      --font: "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--ink); font-family: var(--font); }
+    button { font: inherit; }
+    #deck { width: 100%; height: 100%; }
+    .slide {
+      display: none;
+      position: relative;
+      width: 100%; height: 100%; min-height: 640px;
+      padding: clamp(30px, 4.2vw, 68px) clamp(38px, 5vw, 86px) 62px;
+      background: var(--paper); color: var(--ink);
+      overflow: hidden;
+    }
+    .slide.active { display: flex; flex-direction: column; }
+    .slide::before { content: ""; position: absolute; inset: 0 0 auto; height: 9px; background: var(--blue); }
+    .slide.dark { background: var(--ink); color: var(--white); }
+    .slide.dark::before { background: #60a5fa; }
+    .eyebrow { font-size: clamp(12px, 1.05vw, 16px); letter-spacing: .08em; font-weight: 800; color: var(--blue); margin: 0 0 14px; }
+    .dark .eyebrow { color: #93c5fd; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(54px, 6vw, 90px); line-height: 1.07; letter-spacing: -.055em; max-width: 850px; }
+    h2 { font-size: clamp(36px, 4.1vw, 64px); line-height: 1.13; letter-spacing: -.05em; max-width: 1160px; }
+    h3 { font-size: clamp(21px, 2vw, 31px); line-height: 1.25; letter-spacing: -.035em; }
+    .lead { margin-top: 15px; max-width: 1090px; font-size: clamp(17px, 1.65vw, 25px); line-height: 1.5; color: var(--muted); }
+    .dark .lead { color: #cbd5e1; }
+    .accent { color: var(--blue); }
+    .dark .accent { color: #bfdbfe; }
+    .hero { justify-content: center; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, .75fr); align-items: center; gap: clamp(28px, 5vw, 90px); }
+    .hero .subline { margin-top: 34px; font-size: clamp(20px, 2vw, 30px); color: #bfdbfe; font-weight: 700; }
+    .hero .date { margin-top: 52px; padding-top: 20px; border-top: 3px solid #60a5fa; width: min(560px, 100%); font-size: 19px; color: #cbd5e1; }
+    .output-rail { border: 1px solid #3b82f6; background: #172554; border-radius: 18px; padding: 28px 30px; }
+    .output-rail .label { font-size: 13px; font-weight: 800; letter-spacing: .08em; color: #bfdbfe; }
+    .output-row { display: grid; grid-template-columns: 62px 1fr; gap: 15px; align-items: center; padding: 22px 0; border-bottom: 1px solid #1e40af; }
+    .output-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .output-row b { font-size: 31px; color: #93c5fd; }
+    .output-row span { font-size: 24px; font-weight: 700; }
+    .footer { position: absolute; left: clamp(38px, 5vw, 86px); right: clamp(38px, 5vw, 86px); bottom: 18px; height: 28px; display: flex; align-items: flex-end; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 9px; font-size: 12px; color: var(--muted); }
+    .dark .footer { border-color: #475569; color: #94a3b8; }
+    .slide-number { font-weight: 800; letter-spacing: .08em; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(18px, 2.5vw, 36px); margin-top: clamp(34px, 5vw, 68px); }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 30px); margin-top: clamp(34px, 4.3vw, 58px); }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 44px; }
+    .card { position: relative; min-height: 240px; padding: 28px 28px 26px 32px; border: 1px solid var(--line); border-radius: 16px; background: var(--white); overflow: hidden; }
+    .card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: var(--blue); }
+    .card.green::before { background: var(--green); }
+    .card.orange::before { background: var(--orange); }
+    .card.soft-blue { background: var(--blue-soft); border-color: #93c5fd; }
+    .card.soft-green { background: var(--green-soft); border-color: #5eead4; }
+    .card.soft-orange { background: var(--orange-soft); border-color: #fdba74; }
+    .card .kicker { font-size: 13px; letter-spacing: .07em; font-weight: 800; color: var(--blue-dark); margin-bottom: 23px; }
+    .card.green .kicker { color: var(--green); }
+    .card.orange .kicker { color: var(--orange); }
+    .card p { margin-top: 21px; font-size: clamp(16px, 1.45vw, 21px); line-height: 1.52; color: var(--body); }
+    .statement { margin-top: auto; padding: 17px 25px; border-radius: 12px; background: var(--blue-soft); color: var(--blue-dark); font-size: clamp(17px, 1.6vw, 23px); line-height: 1.4; font-weight: 800; }
+    .statement.darkish { background: var(--ink); color: var(--white); }
+    .statement.warning { background: var(--orange-soft); color: var(--orange); }
+    .statement.danger { background: var(--red-soft); color: var(--red); }
+    .timeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin-top: clamp(42px, 6vw, 86px); position: relative; }
+    .timeline::before { content: ""; position: absolute; left: 3.3%; right: 3.3%; top: 74px; height: 3px; background: var(--line); }
+    .time-node { position: relative; min-height: 245px; padding: 0 16px 0 0; }
+    .time-node .dot { width: 20px; height: 20px; margin: 62px 0 24px; border-radius: 50%; background: var(--ink); border: 4px solid var(--paper); box-shadow: 0 0 0 2px var(--ink); }
+    .time-node.today .dot { background: var(--blue); box-shadow: 0 0 0 2px var(--blue); }
+    .time-node .week { font-size: 15px; font-weight: 800; color: var(--muted); }
+    .time-node h3 { margin-top: 10px; max-width: 190px; }
+    .time-node p { margin-top: 10px; font-size: 16px; line-height: 1.4; color: var(--muted); }
+    .agenda { display: grid; grid-template-columns: 135px 1.1fr 1.55fr 200px; margin-top: 42px; border-top: 2px solid var(--ink); }
+    .agenda > div { min-height: 58px; display: flex; align-items: center; padding: 12px 15px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: clamp(14px, 1.25vw, 18px); line-height: 1.35; }
+    .agenda > div:nth-child(4n+1) { border-left: 1px solid var(--line); font-weight: 800; }
+    .agenda .head { background: var(--ink); color: var(--white); font-size: 15px; font-weight: 800; }
+    .agenda .location { color: var(--blue-dark); font-weight: 800; }
+    .metric-panel { display: grid; grid-template-columns: 1fr 1.4fr 1.4fr; gap: 32px; margin-top: 45px; align-items: stretch; }
+    .metric { background: var(--ink); border-radius: 16px; padding: 30px 34px; color: var(--white); }
+    .metric .n { font-size: clamp(82px, 9vw, 140px); line-height: .8; font-weight: 800; letter-spacing: -.07em; }
+    .metric .denom { margin-top: 17px; color: #bfdbfe; font-size: 25px; font-weight: 800; }
+    .metric .asof { margin-top: 43px; color: #cbd5e1; font-size: 15px; }
+    .quote { display: flex; flex-direction: column; justify-content: center; border-left: 8px solid var(--blue); background: var(--panel); padding: 32px; border-radius: 14px; }
+    .quote b { font-size: 26px; line-height: 1.36; letter-spacing: -.04em; }
+    .quote p { margin-top: 22px; color: var(--muted); font-size: 17px; line-height: 1.45; }
+    .flow { display: grid; grid-template-columns: minmax(0, 1fr) 36px minmax(0, 1fr) 36px minmax(0, 1fr) 36px minmax(0, 1fr) 36px minmax(0, 1fr) 36px minmax(0, 1fr); align-items: center; margin-top: 76px; gap: 10px; }
+    .flow .step { min-height: 160px; display: flex; flex-direction: column; justify-content: center; border: 1px solid var(--line); border-radius: 13px; padding: 19px; background: var(--white); text-align: center; }
+    .flow .step:nth-child(3), .flow .step:nth-child(11) { background: var(--blue-soft); }
+    .flow .step:nth-child(5) { background: var(--orange-soft); }
+    .flow .step:nth-child(7) { background: var(--green-soft); }
+    .flow .step b { font-size: 23px; }
+    .flow .step span { margin-top: 14px; font-size: 15px; line-height: 1.35; color: var(--body); }
+    .flow .arrow { height: 3px; background: var(--blue); position: relative; }
+    .flow .arrow::after { content: ""; position: absolute; right: -2px; top: -5px; width: 11px; height: 11px; border-top: 3px solid var(--blue); border-right: 3px solid var(--blue); transform: rotate(45deg); }
+    .zones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 52px; }
+    .zone { border: 1px solid var(--line); border-radius: 16px; min-height: 295px; padding: 28px; }
+    .zone.club { background: var(--orange-soft); border-color: #fdba74; }
+    .zone.mine { background: var(--blue-soft); border-color: #93c5fd; }
+    .zone.peer { background: var(--green-soft); border-color: #5eead4; }
+    .zone .label { font-size: 13px; font-weight: 800; letter-spacing: .08em; margin-bottom: 24px; }
+    .zone.club .label { color: var(--orange); }.zone.mine .label { color: var(--blue-dark); }.zone.peer .label { color: var(--green); }
+    .zone p { margin-top: 21px; font-size: 18px; line-height: 1.48; color: var(--body); }
+    code { padding: .12em .36em; background: rgba(15, 23, 42, .08); border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: .86em; color: inherit; }
+    .map-grid { display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr; gap: 16px; margin-top: 42px; }
+    .map-card { min-height: 258px; padding: 25px; border: 1px solid var(--line); border-radius: 16px; background: var(--white); }
+    .map-card b { display: block; font-size: 27px; }
+    .map-card .dir { display: inline-block; margin-top: 22px; padding: 6px 10px; border-radius: 999px; background: var(--blue-soft); color: var(--blue-dark); font-size: 13px; font-weight: 800; }
+    .map-card p { margin-top: 16px; font-size: 16px; line-height: 1.45; color: var(--body); }
+    .map-card.plugin { background: var(--blue-soft); border-color: #93c5fd; }
+    .five-q { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 40px; }
+    .question { display: grid; grid-template-columns: 48px 1fr; gap: 15px; align-items: start; padding: 18px 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+    .question b:first-child { width: 34px; height: 34px; padding-top: 8px; border-radius: 50%; background: var(--blue); color: var(--white); font-size: 13px; text-align: center; }
+    .question b:last-child { font-size: 19px; line-height: 1.35; }
+    .question p { grid-column: 2; margin-top: -4px; color: var(--muted); font-size: 15px; line-height: 1.4; }
+    .question:nth-child(5) { grid-column: 1 / -1; }
+    .secrets { margin-top: 22px; padding: 17px 22px; border: 1px solid #fca5a5; border-radius: 12px; background: var(--red-soft); color: var(--red); font-size: 18px; line-height: 1.42; font-weight: 800; }
+    .plugin-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin-top: 52px; }
+    .plugin-box { min-height: 340px; border-radius: 18px; padding: 34px; }
+    .plugin-box.super { background: var(--blue-soft); border: 1px solid #93c5fd; }
+    .plugin-box.vercel { background: var(--green-soft); border: 1px solid #5eead4; }
+    .plugin-box .plugin-name { font-size: 19px; font-weight: 800; letter-spacing: .08em; }
+    .plugin-box.super .plugin-name { color: var(--blue-dark); }.plugin-box.vercel .plugin-name { color: var(--green); }
+    .plugin-box h3 { margin-top: 34px; font-size: clamp(35px, 3.7vw, 55px); }
+    .plugin-box p { margin-top: 25px; font-size: 19px; line-height: 1.5; color: var(--body); }
+    .cmd { display: inline-block; margin-top: 22px; padding: 11px 14px; border-radius: 8px; background: var(--ink); color: var(--white); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: clamp(13px, 1.22vw, 17px); }
+    .plugin-grid { display: grid; grid-template-columns: 1fr 1.4fr 1.4fr; gap: 16px; margin-top: 42px; }
+    .plugin-grid .rail { background: var(--ink); border-radius: 15px; color: var(--white); padding: 28px; }
+    .plugin-grid .rail .big { font-size: 72px; line-height: .8; color: #93c5fd; font-weight: 800; }
+    .plugin-grid .rail p { margin-top: 34px; color: #cbd5e1; font-size: 18px; line-height: 1.45; }
+    .plugin-grid .content { border: 1px solid var(--line); border-radius: 15px; padding: 28px; }
+    .plugin-grid .content p { margin-top: 20px; color: var(--body); font-size: 18px; line-height: 1.48; }
+    .four-path { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 52px; }
+    .four-path .path { position: relative; min-height: 270px; padding: 26px; border: 1px solid var(--line); border-radius: 15px; background: var(--white); }
+    .four-path .path:nth-child(1) { background: var(--blue-soft); }.four-path .path:nth-child(3) { background: var(--green-soft); }.four-path .path:nth-child(4) { background: var(--orange-soft); }
+    .four-path .n { color: var(--blue-dark); font-size: 17px; font-weight: 800; }
+    .four-path h3 { margin-top: 38px; }.four-path p { margin-top: 22px; font-size: 17px; line-height: 1.45; color: var(--body); }
+    .mini-app { display: grid; grid-template-columns: 1fr .95fr; gap: 52px; margin-top: 42px; align-items: stretch; }
+    .requirements { border-radius: 16px; padding: 28px; background: var(--panel); border: 1px solid var(--line); }
+    .req { display: grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 18px; color: var(--body); }
+    .req:last-child { border-bottom: 0; }.req b { color: var(--blue-dark); }
+    .wireframe { border: 1px solid var(--line); border-radius: 16px; background: var(--white); padding: 28px; }
+    .wireframe small { color: var(--blue-dark); font-weight: 800; letter-spacing: .08em; }.wireframe h3 { margin-top: 22px; font-size: 34px; }.wireframe .sample { margin-top: 25px; padding: 15px; border: 1px solid #93c5fd; background: var(--blue-soft); color: var(--blue-dark); border-radius: 9px; font-weight: 800; }.wireframe .cta { margin-top: 24px; display: inline-block; padding: 10px 18px; border-radius: 8px; background: var(--blue); color: var(--white); font-weight: 800; }
+    .peer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 48px; }
+    .peer-card { min-height: 130px; display: grid; grid-template-columns: 46px 1fr; gap: 18px; align-items: center; border: 1px solid var(--line); border-radius: 14px; padding: 22px; background: var(--panel); }.peer-card:nth-child(odd) { background: var(--blue-soft); }.peer-card .q { width: 34px; height: 34px; padding-top: 8px; border-radius: 50%; background: var(--blue); color: var(--white); font-size: 12px; text-align: center; font-weight: 800; }.peer-card b { font-size: 22px; line-height: 1.33; }.peer-card p { margin-top: 8px; color: var(--muted); font-size: 15px; }
+    .destinations { display: grid; grid-template-columns: 1fr 130px 1fr; align-items: center; gap: 24px; margin-top: 50px; }.destination { min-height: 300px; border-radius: 16px; padding: 32px; }.destination.site { background: var(--green-soft); border: 1px solid #5eead4; }.destination.pr { background: var(--blue-soft); border: 1px solid #93c5fd; }.destination .where { font-size: 16px; font-weight: 800; letter-spacing: .05em; }.destination.site .where { color: var(--green); }.destination.pr .where { color: var(--blue-dark); }.destination h3 { margin-top: 33px; font-size: 37px; }.destination p { margin-top: 25px; font-size: 19px; line-height: 1.5; color: var(--body); }.connector { height: 4px; background: var(--ink); position: relative; }.connector::after { content: ""; position: absolute; right: -2px; top: -7px; width: 15px; height: 15px; border-top: 4px solid var(--ink); border-right: 4px solid var(--ink); transform: rotate(45deg); }
+    .pr-path { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 55px; }.pr-path .node { min-height: 180px; border: 1px solid var(--line); border-radius: 14px; padding: 24px; background: var(--white); }.pr-path .node:nth-child(2) { background: var(--blue-soft); }.pr-path .node:nth-child(3) { background: var(--green-soft); }.pr-path .node:nth-child(4) { background: var(--orange-soft); }.pr-path .node .n { font-size: 15px; font-weight: 800; color: var(--blue-dark); }.pr-path .node h3 { margin-top: 28px; }.pr-path .node p { margin-top: 17px; font-size: 15px; line-height: 1.45; color: var(--body); }
+    .pr-list { margin-top: 37px; border-top: 2px solid var(--ink); }.pr-row { display: grid; grid-template-columns: 70px 310px 1fr; padding: 16px 18px; border: 1px solid var(--line); border-top: 0; min-height: 58px; align-items: center; font-size: 17px; }.pr-row:nth-child(odd) { background: var(--panel); }.pr-row .n { font-weight: 800; color: var(--blue-dark); }.pr-row b { font-size: 19px; }.pr-row span { color: var(--body); }.pr-row.added { background: var(--green-soft); }
+    .checklist { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 42px; }.check { display: grid; grid-template-columns: 56px 1fr; gap: 15px; min-height: 75px; align-items: center; padding: 17px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }.check .num { padding: 8px 0; border-radius: 999px; background: var(--blue); color: var(--white); font-weight: 800; text-align: center; }.check b { font-size: 18px; }.check p { margin-top: 4px; color: var(--muted); font-size: 15px; }
+    .source { margin-top: auto; padding-top: 13px; color: var(--muted); font-size: 12px; }
+    .source a { color: inherit; }
+    #controls { position: fixed; z-index: 20; right: 18px; bottom: 15px; display: flex; gap: 8px; }.nav { width: 38px; height: 38px; border: 1px solid #64748b; border-radius: 999px; background: rgba(15,23,42,.88); color: #fff; cursor: pointer; font-weight: 800; }.nav:hover { background: var(--blue); border-color: var(--blue); }
+    #progress { position: fixed; z-index: 22; left: 0; top: 0; height: 5px; width: 0; background: #60a5fa; transition: width .25s ease; }
+    #notes { display: none; position: fixed; z-index: 30; right: 18px; top: 18px; width: min(460px, calc(100vw - 36px)); max-height: calc(100vh - 100px); overflow: auto; padding: 22px; border: 1px solid #475569; border-radius: 14px; background: rgba(15,23,42,.97); color: #e2e8f0; box-shadow: 0 18px 55px rgba(0,0,0,.35); }.notes-open #notes { display: block; }.notes-title { color: #93c5fd; font-size: 14px; font-weight: 800; letter-spacing: .08em; }.notes-copy { white-space: pre-line; margin-top: 14px; color: #e2e8f0; font-size: 15px; line-height: 1.55; }.notes-source { margin-top: 18px; color: #94a3b8; font-size: 12px; line-height: 1.5; }
+    #help { display: none; position: fixed; z-index: 40; left: 50%; top: 50%; transform: translate(-50%,-50%); width: min(520px, calc(100vw - 40px)); padding: 32px; border-radius: 18px; background: rgba(15,23,42,.97); color: #fff; box-shadow: 0 20px 60px rgba(0,0,0,.45); }.help-open #help { display: block; } #help h3 { color: #bfdbfe; } #help p { margin-top: 20px; color: #cbd5e1; line-height: 1.65; }
+    @media (max-width: 1180px) and (min-width: 901px) {
+      .flow { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 42px; row-gap: 18px; }
+      .flow .arrow { display: none; }
+      .flow .step { min-height: 116px; padding: 14px; }
+    }
+    @media (max-width: 900px) {
+      .slide { min-height: 540px; padding: 38px 34px 56px; }.hero-grid, .plugin-pair, .mini-app, .destinations { grid-template-columns: 1fr; }.hero-grid .output-rail { display: none; }.grid-3, .zones { grid-template-columns: 1fr 1fr; }.grid-4, .four-path, .pr-path { grid-template-columns: 1fr 1fr; }.timeline { grid-template-columns: 1fr; margin-top: 20px; }.timeline::before { display: none; }.time-node { min-height: 0; display: grid; grid-template-columns: 44px 1fr; gap: 10px; padding: 9px 0; }.time-node .dot { margin: 6px 0; }.time-node .week { grid-column: 2; }.time-node h3, .time-node p { grid-column: 2; }.agenda { grid-template-columns: 80px 1fr 1fr; }.agenda > div:nth-child(4n) { display: none; }.metric-panel { grid-template-columns: 1fr; gap: 16px; }.flow { grid-template-columns: 1fr; margin-top: 24px; }.flow .arrow { height: 24px; width: 3px; justify-self: center; }.flow .arrow::after { right: -5px; top: 12px; transform: rotate(135deg); }.map-grid { grid-template-columns: 1fr 1fr; }.plugin-grid { grid-template-columns: 1fr; }.connector { height: 60px; width: 4px; justify-self: center; }.connector::after { right: -6px; top: auto; bottom: -2px; transform: rotate(135deg); }.pr-row { grid-template-columns: 40px 1fr; }.pr-row span { grid-column: 2; margin-top: 5px; }.five-q, .peer-grid, .checklist { grid-template-columns: 1fr; }
+    }
+    @media print { html, body { overflow: visible; background: #fff; }.slide { display: flex !important; width: 13.333in; height: 7.5in; min-height: 0; page-break-after: always; } #controls, #progress, #notes, #help { display: none !important; } }
+  </style>
+</head>
+<body>
+  <div id="progress"></div>
+  <main id="deck" aria-label="DP Investor Club Week 4 발표자료">
+
+    <section class="slide dark hero active" data-note="여는 말: 오늘은 웹사이트 하나를 만드는 날이 아닙니다. 지난주에 처음 나를 위해 쓴 스킬을, 다른 사람이 이해하고 한 번 써 보고, 다음 사람이 다시 받을 수 있게 만드는 날입니다." data-source="User direction, 2026-07-30 · https://github.com/dp-investor-club/my-investor-club-workspace/blob/main/.claude/skills/week4/SKILL.md">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow">DREAMPLUS INVESTOR CLUB · AI INTENSIVE</p>
+          <h1>Week 4<br>내 것을 남이<br><span class="accent">쓸 수 있게</span></h1>
+          <p class="subline">Superpowers로 만들고 · Vercel로 닿게 하고 · PR로 남깁니다</p>
+          <p class="date">2026.07.30 · 13:00–15:30</p>
+        </div>
+        <aside class="output-rail" aria-label="오늘의 산출물">
+          <p class="label">TODAY'S OUTPUT</p>
+          <div class="output-row"><b>01</b><span>나의 스킬</span></div>
+          <div class="output-row"><b>02</b><span>배포 URL + 접근 확인</span></div>
+          <div class="output-row"><b>03</b><span>공동 PR</span></div>
+        </aside>
+      </div>
+      <div class="footer"><span class="slide-number">01 / 25</span><span>DP Investor Club · AI Intensive</span></div>
+    </section>
+
+    <section class="slide" data-note="세 산출물의 역할을 분리합니다. 스킬은 절차, 웹사이트는 처음 보는 사람의 입구, PR은 공동 자산으로 넘기는 제안입니다. 세 가지를 목표로 하되, Week 4의 최소 완료선은 PR입니다. Vercel 권한이 막히면 이유를 남기고 PR까지 진행합니다." data-source="User direction, 2026-07-30 · Week4 SKILL.md">
+      <p class="eyebrow">오늘의 완료</p>
+      <h2>오늘의 목표는 세 가지,<br>최소 완료선은 Skill PR입니다.</h2>
+      <p class="lead">사이트가 멋진가보다, 한 사람이 이해하고 한 사람이 다시 받을 수 있는가가 기준입니다.</p>
+      <div class="grid-3">
+        <article class="card"><p class="kicker">01 · MAKE</p><h3>나의 스킬을 수리한다</h3><p>발동 · 산출 · 이양 세 가지 중 걸린 것 하나를 실제로 고칩니다.</p></article>
+        <article class="card green"><p class="kicker">02 · REACH</p><h3>배포 URL을 만든다</h3><p>처음 보는 사람이 내 스킬의 문제·대상·첫 사용을 30초 안에 알게 합니다.</p></article>
+        <article class="card orange"><p class="kicker">03 · SHARE</p><h3>공동 Workspace에 PR을 연다</h3><p>내 스킬의 사본과 사용 안내를 동료가 리뷰할 수 있는 자리에 올립니다.</p></article>
+      </div>
+      <p class="statement">핵심: PR은 필수 완료선입니다. 배포 권한이 막히면 이유를 기록하고 PR까지 진행합니다. 웹사이트는 그 스킬을 처음 보는 사람에게 여는 ‘문’입니다.</p>
+      <div class="footer"><span class="slide-number">02 / 25</span><span>오늘의 완료</span></div>
+    </section>
+
+    <section class="slide" data-note="웹 제작이 독립된 과제가 아니라 기존 5주 흐름의 Week 4 역할이라는 것을 보여 줍니다. Week 3에서 나를 위해 푼 병목을 오늘 남의 첫 사용으로 넘깁니다." data-source="https://github.com/dp-investor-club/my-investor-club-workspace/blob/main/curriculum.md">
+      <p class="eyebrow">전체 지도</p>
+      <h2>5주 여정에서 오늘은<br>‘내 병목’을 ‘남의 첫 사용’으로 넘기는 자리입니다.</h2>
+      <div class="timeline">
+        <div class="time-node"><p class="week">WEEK 1</p><div class="dot"></div><h3>나를 AI가 읽게</h3><p>작업실 · 선언</p></div>
+        <div class="time-node"><p class="week">WEEK 2</p><div class="dot"></div><h3>정보가 오게</h3><p>첫 스킬</p></div>
+        <div class="time-node"><p class="week">WEEK 3</p><div class="dot"></div><h3>내 병목을 소유</h3><p>첫 해소</p></div>
+        <div class="time-node today"><p class="week">WEEK 4 · TODAY</p><div class="dot"></div><h3>남의 병목도 풀기</h3><p>사이트 · PR</p></div>
+        <div class="time-node"><p class="week">WEEK 5</p><div class="dot"></div><h3>좋은 것을 넣기</h3><p>증강</p></div>
+      </div>
+      <p class="statement darkish">오늘 묻는 한 가지: <strong>내가 없을 때도 누군가 이 스킬을 이해하고 시작할 수 있나?</strong></p>
+      <div class="footer"><span class="slide-number">03 / 25</span><span>전체 지도</span></div>
+    </section>
+
+    <section class="slide" data-note="오늘의 150분을 설명합니다. 입력 위치를 일부러 보여 줍니다: Claude Code, Browser, GitHub가 역할이 다릅니다. 늦어지면 Vercel 연결을 줄여도 PR은 줄이지 않습니다." data-source="https://github.com/dp-investor-club/operations/blob/main/README.md · User direction, 2026-07-30">
+      <p class="eyebrow">오늘의 흐름</p>
+      <h2>150분은 ‘설명’보다<br>한 번 실제로 완주하는 데 씁니다.</h2>
+      <div class="agenda" role="table" aria-label="오늘의 시간표">
+        <div class="head">시간</div><div class="head">무엇을</div><div class="head">남는 것</div><div class="head">입력 위치</div>
+        <div>00–12</div><div>전체 지도 + 지난주 리캡</div><div>오늘 고를 스킬</div><div class="location">대화</div>
+        <div>12–35</div><div>구조 지도 + GitHub + 두 플러그인</div><div>언제 무엇을 고를지</div><div class="location">대화</div>
+        <div>35–60</div><div>Superpowers로 스킬/사이트 설계</div><div>사용자 · 문제 · 첫 행동</div><div class="location">Claude Code</div>
+        <div>60–100</div><div>한 페이지 웹앱 만들기</div><div>작동하는 로컬 페이지</div><div class="location">Claude Code</div>
+        <div>100–120</div><div>Vercel setup → deploy → 확인</div><div>배포 URL + 접근 확인 기록</div><div class="location">Claude Code / Browser</div>
+        <div>120–145</div><div>동료 테스트 + Skill PR</div><div>피드백 + PR 링크</div><div class="location">Browser / GitHub</div>
+        <div>145–150</div><div>세 줄 결산 + Slack 제출</div><div>다음 행동 한 줄</div><div class="location">Claude Code</div>
+      </div>
+      <p class="statement warning">시간이 밀리면: Vercel 연결 블록을 줄여도 PR 블록은 줄이지 않습니다.</p>
+      <div class="footer"><span class="slide-number">04 / 25</span><span>오늘의 흐름</span></div>
+    </section>
+
+    <section class="slide" data-note="20/29는 7월 30일 11:50 KST 기준의 실측 스냅샷입니다. 아직 수치가 닫히지 않았기 때문에 개인이나 클러스터에 대한 평가로 쓰지 않습니다." data-source="https://github.com/dp-investor-club/operations/blob/main/week-03/retro.md">
+      <p class="eyebrow">지난주 리캡</p>
+      <h2>지난주 과제는 20/29까지 왔습니다.<br>하지만 이 숫자는 아직 닫히지 않은 스냅샷입니다.</h2>
+      <p class="lead">제출률로 사람을 판단하지 않고, 오늘 우리가 가져올 ‘변화’를 봅니다.</p>
+      <div class="metric-panel">
+        <div class="metric"><div class="n">20</div><div class="denom">/ 29 제출</div><p class="asof">2026.07.30 11:50 KST 스냅샷</p></div>
+        <div class="quote"><b>지난주 형식</b><p>원래 생각<br>→ 받은 피드백<br>→ 발전시킨 방향</p></div>
+        <div class="quote"><b>하지 않을 것</b><p>중간 제출 수치로<br>“어느 유형이 안 된다”고<br>단정하지 않습니다.</p></div>
+      </div>
+      <p class="statement">오늘의 질문: 지난주 내가 찾은 병목은, 처음 보는 사람에게도 ‘이게 왜 필요한가’로 전달될 수 있나?</p>
+      <div class="footer"><span class="slide-number">05 / 25</span><span>지난주 리캡</span></div>
+    </section>
+
+    <section class="slide" data-note="서로 다른 스킬에서도 공통된 핵심 구조가 나왔습니다. AI는 후보를 구조화하고, 사람은 선택과 이유를 기록합니다. 그 구조를 남이 보게 하기 위해 사이트/PR이 필요합니다." data-source="https://github.com/dp-investor-club/operations/blob/main/week-03/retro.md">
+      <p class="eyebrow">지난주 리캡</p>
+      <h2>지난주의 좋은 변화는<br>‘스킬을 만들었다’보다 ‘병목 정의가 움직였다’는 데 있습니다.</h2>
+      <div class="grid-3">
+        <article class="card"><p class="kicker">01 · 처음</p><h3>“도구가 없어서 안 돼요”</h3><p>막막함을 도구 부재로 보던 상태</p></article>
+        <article class="card soft-blue"><p class="kicker">02 · 피드백</p><h3>“정말 막힌 건 뭐죠?”</h3><p>짝의 질문으로 문제를 한 문장으로 좁힘</p></article>
+        <article class="card soft-green"><p class="kicker">03 · 발전</p><h3>“선택과 이유가 안 남아요”</h3><p>스킬보다 판단의 흔적을 남기는 구조로 이동</p></article>
+      </div>
+      <p class="statement darkish">오늘의 출발점: <strong>AI는 후보를 구조화하고, 나는 선택과 이유를 남긴다.</strong></p>
+      <div class="footer"><span class="slide-number">06 / 25</span><span>지난주 리캡</span></div>
+    </section>
+
+    <section class="slide" data-note="과제 리캡 직후에 이 구조를 먼저 잡습니다. Skill, Plugin, MCP, CLI는 서로 위아래로 쌓이는 서열이 아니라 서로 다른 일을 맡는 도구 표면입니다. 오늘 학생은 이름을 외우는 대신, 필요한 일을 말하고 그에 맞는 표면을 고릅니다." data-source="User-provided Block 2 operating-card direction, 2026-07-30 · https://github.com/dp-investor-club/my-investor-club-workspace/blob/main/club/week-01/sources/skills-hooks-agents-mcp-plugins.md">
+      <p class="eyebrow">BLOCK 2 · 도구 구조</p>
+      <h2>Skill · Plugin · MCP · CLI는<br>같은 일을 하는 이름이 아닙니다.</h2>
+      <p class="lead">“무엇을 하고 싶은가?”를 먼저 말하면, 필요한 도구의 종류가 보입니다.</p>
+      <div class="grid-4">
+        <article class="card soft-blue"><p class="kicker">SKILL</p><h3>절차를 정의</h3><p>반복할 업무를 어떤 순서와 기준으로 할지 적습니다.</p></article>
+        <article class="card green"><p class="kicker">PLUGIN</p><h3>능력을 묶어 설치</h3><p>스킬·명령·도구 설정을 패키지로 가져옵니다.</p></article>
+        <article class="card orange"><p class="kicker">MCP</p><h3>외부 접근을 연결</h3><p>다른 시스템의 읽기·쓰기를 연결할 수 있는 통로가 됩니다.</p></article>
+        <article class="card"><p class="kicker">CLI</p><h3>명령을 실행</h3><p>터미널에서 상태를 보고, 명령을 실행하고, 결과를 확인합니다.</p></article>
+      </div>
+      <p class="statement darkish">이 네 가지는 ‘쌓이는 계층’이 아닙니다. 오늘 할 일에 따라 하나만 쓰거나, 필요한 범위에서 조합합니다.</p>
+      <div class="footer"><span class="slide-number">07 / 25</span><span>Block 2 · 도구 구조</span></div>
+    </section>
+
+    <section class="slide" data-note="이것이 Week 4 Block 2의 보강 운영 카드입니다. 이 카드의 방향 표기는 수업에서 이해를 돕기 위한 지도입니다. 어느 도구가 실제로 어떤 권한을 받는지는 항상 별도로 확인합니다." data-source="User-provided Block 2 operating-card direction, 2026-07-30 · https://github.com/dp-investor-club/my-investor-club-workspace/blob/main/club/week-01/sources/skills-hooks-agents-mcp-plugins.md">
+      <p class="eyebrow">BLOCK 2 · 선택 지도</p>
+      <h2>용어가 아니라, 내가 하려는 일로<br>Skill · Plugin · MCP · CLI를 구분합니다.</h2>
+      <p class="lead">아래의 방향 표기는 이해를 돕는 지도입니다. 실제 권한·입출력·되돌림은 연결 전에 확인해야 합니다.</p>
+      <div class="map-grid">
+        <article class="map-card"><b>Skill</b><span class="dir">안 · 절차</span><p>내가 쓴 업무 매뉴얼. “어떻게 할지”를 정합니다.</p></article>
+        <article class="map-card"><b>Plugin</b><span class="dir">받기 · 묶음</span><p>스킬·명령·도구 설정을 패키지로 설치하는 확장팩입니다.</p></article>
+        <article class="map-card plugin"><b>MCP</b><span class="dir">밖 · 접근</span><p>외부 시스템에 읽기/쓰기를 연결할 <em>수 있는</em> 통로입니다.</p></article>
+        <article class="map-card"><b>CLI</b><span class="dir">양쪽 · 명령</span><p>터미널 도구를 AI가 실행할 <em>수 있는</em> 명령 표면입니다.</p></article>
+      </div>
+      <p class="statement warning">지도에 “연결”이라고 적혀 있어도, 실제 접근 권한·데이터 범위·배포 권한이 자동으로 생기는 것은 아닙니다.</p>
+      <div class="footer"><span class="slide-number">08 / 25</span><span>Block 2 · 선택 지도</span></div>
+    </section>
+
+    <section class="slide" data-note="모든 연결은 다섯 질문을 통과해야 합니다. 그리고 secret non-retention, 즉 비밀정보는 대화/발표/파일/git/스크린샷에 보관하지 않는다는 규칙을 지킵니다." data-source="User-provided Block 2 operating-card direction, 2026-07-30 · submit/SKILL.md · github-helper/SKILL.md">
+      <p class="eyebrow">BLOCK 2 · 연결 전 다섯 질문</p>
+      <h2>설치 전에 묻고, 실행 뒤에 확인합니다.</h2>
+      <div class="five-q">
+        <article class="question"><b>01</b><div><b>무슨 시스템·어느 계정에 연결되는가?</b><p>개인 계정인가, 팀 계정인가, 누가 승인하는가?</p></div></article>
+        <article class="question"><b>02</b><div><b>읽기만 하는가, 쓰기·배포까지 하는가?</b><p>이번 실행이 외부 상태를 바꾸는지 먼저 구분합니다.</p></div></article>
+        <article class="question"><b>03</b><div><b>무엇이 들어오고, 무엇이 어디로 나가는가?</b><p>입력·출력·로그·저장 위치를 한 문장으로 말할 수 있어야 합니다.</p></div></article>
+        <article class="question"><b>04</b><div><b>실패하면 어떻게 되돌리고, 무엇으로 확인하는가?</b><p>되돌림·로그·URL·git status 같은 검증 방법을 정합니다.</p></div></article>
+        <article class="question"><b>05</b><div><b>이 연결이 지금 필요한가?</b><p>“가능하다”와 “오늘 해야 한다”는 다릅니다.</p></div></article>
+      </div>
+      <p class="secrets">비밀정보 비보존 규칙: API key · token · password · 계정정보는 채팅, 발표자료, 코드, Git, 스크린샷에 복사하지 않습니다. 공식 로그인 흐름만 쓰고, <code>.env</code>는 commit하지 않습니다.</p>
+      <div class="footer"><span class="slide-number">09 / 25</span><span>Block 2 · 운영 카드</span></div>
+    </section>
+
+    <section class="slide" data-note="Git은 내 컴퓨터의 기록이고, GitHub는 협업 공간입니다. 이 구분을 잡으면 PR이 파일 업로드가 아니라 협업 제안이라는 것이 보입니다." data-source="https://github.com/dp-investor-club/my-investor-club-workspace/blob/main/club/week-01/sources/git-vs-github.md">
+      <p class="eyebrow">GitHub</p>
+      <h2>Git은 내 컴퓨터의 기록 엔진,<br>GitHub는 그 기록을 함께 쓰는 도로입니다.</h2>
+      <div class="grid-2">
+        <article class="card"><p class="kicker">GIT</p><h3>내 작업의 세이브 기록</h3><p>파일이 어떻게 바뀌었는지 내 컴퓨터에서 남깁니다.<br><br><strong>commit = 의미 있는 저장 지점</strong></p></article>
+        <article class="card green"><p class="kicker">GITHUB</p><h3>다른 사람과 만나는 장소</h3><p>내 기록을 올리고, 리뷰를 받고, 무엇을 왜 바꿨는지 함께 봅니다.<br><br><strong>PR = “이 변경을 함께 볼까요?”</strong></p></article>
+      </div>
+      <p class="statement">오늘 GitHub의 목적은 ‘명령을 외우기’가 아니라, 내 스킬의 변경을 동료가 읽고 다시 쓸 수 있게 만드는 것입니다.</p>
+      <div class="footer"><span class="slide-number">10 / 25</span><span>GitHub</span></div>
+    </section>
+
+    <section class="slide" data-note="오늘의 GitHub 흐름은 하나로 고정합니다. main에 직접 쓰지 않습니다. 복잡한 브랜치 전략이나 fork는 가르치지 않습니다." data-source="https://github.com/dp-investor-club/my-investor-club-workspace/blob/main/.claude/skills/github-helper/SKILL.md · submit/SKILL.md">
+      <p class="eyebrow">GitHub</p>
+      <h2>오늘은 이 한 줄만 기억하면 됩니다.</h2>
+      <p class="lead">공동 Workspace에서는 main에 바로 쓰지 않고, 내 이름이 붙은 branch에서 PR을 냅니다.</p>
+      <div class="flow" aria-label="GitHub workflow">
+        <div class="step"><b>내 작업</b><span>SKILL.md 수리</span></div><div class="arrow"></div>
+        <div class="step"><b>branch</b><span>나만의 작업선</span></div><div class="arrow"></div>
+        <div class="step"><b>commit</b><span>의미 있는 저장</span></div><div class="arrow"></div>
+        <div class="step"><b>PR</b><span>리뷰 요청</span></div><div class="arrow"></div>
+        <div class="step"><b>review</b><span>동료의 첫 사용</span></div><div class="arrow"></div>
+        <div class="step"><b>merge</b><span>공동 자산</span></div>
+      </div>
+      <p class="statement darkish">PR은 ‘업로드 버튼’이 아니라, 내가 만든 것을 다른 사람이 검토하고 이어받도록 만드는 제안서입니다.</p>
+      <div class="footer"><span class="slide-number">11 / 25</span><span>GitHub</span></div>
+    </section>
+
+    <section class="slide" data-note="같은 레포지만 주체가 다릅니다. club은 클럽 자료라 읽기 전용, 내 스킬은 개인 원본, peer-skills는 동료가 받을 사본입니다. 이 구분을 PR 전에 이해해야 합니다." data-source="https://github.com/dp-investor-club/my-investor-club-workspace/blob/main/curriculum.md · submit/SKILL.md · peer-skills/README.md">
+      <p class="eyebrow">My Investor Club Workspace</p>
+      <h2>같은 레포여도<br>누가 소유하는지에 따라 만지는 곳이 다릅니다.</h2>
+      <div class="zones">
+        <article class="zone club"><p class="label">CLUB · 받는 자리</p><h3><code>club/</code> · <code>curriculum.md</code></h3><p>클럽이 갱신하는 읽기전용 재료<br>→ <strong>고치지 않는다</strong></p></article>
+        <article class="zone mine"><p class="label">MINE · 내가 짓는 자리</p><h3><code>weeks/</code> · <code>.claude/skills/&lt;내 스킬&gt;/</code></h3><p>오늘의 사이트·스킬 출발점<br>→ <strong>내가 고친다</strong></p></article>
+        <article class="zone peer"><p class="label">PEER · 동료가 받는 자리</p><h3><code>peer-skills/peer-{ID}-{스킬}/</code></h3><p>PR로 들어가는 재사용 가능한 사본<br>→ <strong>내 원본과 섞지 않는다</strong></p></article>
+      </div>
+      <p class="statement danger">금지: <code>club/</code> 수정 · token/.env/계좌정보 커밋 · main에 직접 push</p>
+      <div class="footer"><span class="slide-number">12 / 25</span><span>Workspace 경계</span></div>
+    </section>
+
+    <section class="slide" data-note="오늘은 플러그인을 많이 나열하지 않습니다. Superpowers와 Vercel 두 개만 배웁니다. 하나는 만드는 규율, 하나는 배포/관찰의 연결입니다." data-source="https://claude.com/plugins/superpowers · https://claude.com/plugins/vercel">
+      <p class="eyebrow">오늘 배울 플러그인</p>
+      <h2>오늘은 딱 두 개만 배웁니다.</h2>
+      <p class="lead">하나는 ‘어떻게 더 잘 만들지’, 다른 하나는 ‘어떻게 다른 사람에게 닿게 할지’를 맡습니다.</p>
+      <div class="plugin-pair">
+        <article class="plugin-box super"><p class="plugin-name">SUPERPOWERS</p><h3>만드는 방식을<br>정돈한다</h3><p>브레인스토밍 · 계획 · 테스트 · 디버깅 · 리뷰</p></article>
+        <article class="plugin-box vercel"><p class="plugin-name">VERCEL</p><h3>만든 것을<br>도달하게 한다</h3><p>배포 · URL · 로그 · 프로젝트 연결</p></article>
+      </div>
+      <p class="statement darkish">Superpowers는 ‘무엇을 만들지’를 대신 정하지 않고, Vercel은 ‘무엇을 배포해도 되는지’를 대신 판단하지 않습니다.</p>
+      <div class="footer"><span class="slide-number">13 / 25</span><span>두 플러그인</span></div>
+    </section>
+
+    <section class="slide" data-note="Superpowers는 더 많은 버튼이 아니라 계획과 검증을 습관화하는 프레임워크입니다. 오늘 학생은 대상/병목/첫 행동을 좁히고 구현 뒤 동료 테스트를 통과시키는 데 사용합니다." data-source="https://claude.com/plugins/superpowers · https://github.com/obra/superpowers/blob/main/README.md">
+      <p class="eyebrow">PLUGIN 1 · SUPERPOWERS</p>
+      <h2>Superpowers는 ‘더 많이 시키는 플러그인’이 아니라,<br>성급하게 만들지 않게 하는 작업 규율입니다.</h2>
+      <div class="plugin-grid">
+        <aside class="rail"><div class="big">?</div><p>만들기 전에<br>먼저 물어야 할 질문을<br>되돌려 줍니다.</p></aside>
+        <article class="content"><h3>만들기 전</h3><p>막연한 요청을 바로 구현하지 않습니다. 누구의 어떤 막막함을 한 번에 줄이는지 묻습니다.</p></article>
+        <article class="content"><h3>만드는 동안과 뒤</h3><p>합의한 순서로 만들고, 테스트·디버깅·리뷰를 마지막 장식이 아니라 작업의 일부로 둡니다.</p></article>
+      </div>
+      <span class="cmd">/plugin install superpowers@claude-plugins-official</span>
+      <p class="statement">오늘 첫 사용: “내 스킬을 소개할 한 페이지를 만들기 전에, 대상·문제·첫 행동을 세 문장으로 좁힌다.”</p>
+      <div class="footer"><span class="slide-number">14 / 25</span><span>Superpowers</span></div>
+    </section>
+
+    <section class="slide" data-note="공식 소개는 /brainstorming과 /execute-plan을 예시로 듭니다. 설치한 버전에 따라 slash menu의 이름이 namespace 형태일 수 있으므로 자동완성에서 Superpowers 항목을 보고 하나를 실행하게 합니다." data-source="https://claude.com/plugins/superpowers · https://github.com/obra/superpowers/blob/main/README.md">
+      <p class="eyebrow">PLUGIN 1 · SUPERPOWERS</p>
+      <h2>Superpowers의 골든 패스:<br>생각을 먼저 붙잡고, 만든 뒤에는 반드시 확인합니다.</h2>
+      <div class="four-path">
+        <article class="path"><p class="n">01</p><h3>/brainstorming</h3><p>대상 사용자 · 한 가지 병목 · 첫 행동을 정한다</p></article>
+        <article class="path"><p class="n">02</p><h3>합의한 plan</h3><p>페이지의 5개 섹션과 완료 기준을 적는다</p></article>
+        <article class="path"><p class="n">03</p><h3>/execute-plan</h3><p>계획대로 한 조각씩 구현하고 중간 검토를 둔다</p></article>
+        <article class="path"><p class="n">04</p><h3>test / review</h3><p>내가 설명하지 않아도 이해되는지 동료에게 확인한다</p></article>
+      </div>
+      <p class="statement darkish">설치 후 확인: Slash 메뉴에서 Superpowers의 brainstorming / execute-plan 계열 명령이 보이는지 확인하고, 그중 하나를 실제로 1회 실행합니다.</p>
+      <div class="footer"><span class="slide-number">15 / 25</span><span>Superpowers 실행</span></div>
+    </section>
+
+    <section class="slide" data-note="Vercel은 웹사이트를 디자인하는 도구가 아닙니다. 이미 만든 애플리케이션을 deploy하고 URL 및 logs를 관리하는 연결입니다. /deploy는 production deployment임을 분명히 합니다." data-source="https://claude.com/plugins/vercel · https://github.com/vercel/vercel-deploy-claude-code-plugin">
+      <p class="eyebrow">PLUGIN 2 · VERCEL</p>
+      <h2>Vercel은 ‘코드를 배포 URL로 바꾸고,<br>배포 뒤에 무슨 일이 일어나는지 보는’ 연결입니다.</h2>
+      <div class="grid-3">
+        <article class="card"><p class="kicker">SETUP</p><h3>내 계정과 프로젝트를 연결</h3><p>Vercel CLI 로그인과 프로젝트 연결이 먼저입니다.<br><br>권한이 없으면 배포도 없습니다.</p></article>
+        <article class="card green"><p class="kicker">DEPLOY</p><h3>배포 URL을 만든다</h3><p>내 로컬 페이지를 URL로 올리고, 다른 사람이 열 수 있는지는 프로젝트 설정과 권한으로 확인합니다.</p></article>
+        <article class="card orange"><p class="kicker">OBSERVE</p><h3>로그로 확인한다</h3><p>배포가 안 되거나 페이지가 이상하면 로그를 보고 원인을 좁힙니다.</p></article>
+      </div>
+      <span class="cmd">/plugin install vercel@claude-plugins-official</span>
+      <p class="statement danger">중요: <code>/deploy</code>는 production 배포입니다. 동료 테스트 전에는 비밀키·계정정보·미검토 콘텐츠가 없는지 먼저 확인합니다.</p>
+      <div class="footer"><span class="slide-number">16 / 25</span><span>Vercel</span></div>
+    </section>
+
+    <section class="slide" data-note="Vercel의 공식 명령을 사용합니다. /vercel-setup, /deploy, /vercel-logs. Vercel CLI와 Vercel login은 사전 조건입니다. Vercel login에서 token을 채팅이나 문서에 붙이지 않습니다." data-source="https://claude.com/plugins/vercel · https://github.com/vercel/vercel-deploy-claude-code-plugin">
+      <p class="eyebrow">PLUGIN 2 · VERCEL</p>
+      <h2>Vercel의 골든 패스:<br>연결 → 배포 → 방문 → 필요하면 로그입니다.</h2>
+      <div class="pr-list">
+        <div class="pr-row"><span class="n">01</span><b>/vercel-setup</b><span>Vercel CLI를 초기화하고 내 계정/프로젝트를 연결</span></div>
+        <div class="pr-row"><span class="n">02</span><b>/deploy</b><span>확인한 페이지를 production URL로 배포</span></div>
+        <div class="pr-row"><span class="n">03</span><b>Browser에서 URL 열기</b><span>링크·문구·모바일 첫 화면을 실제로 확인</span></div>
+        <div class="pr-row"><span class="n">04</span><b>/vercel-logs</b><span>오류가 나면 로그를 가져와 원인을 좁힘</span></div>
+      </div>
+      <p class="statement darkish">현장 게이트: Vercel CLI와 계정 로그인은 사전에 확인해야 합니다. 로그인 실패는 코드 문제가 아니라 권한 문제입니다.</p>
+      <div class="footer"><span class="slide-number">17 / 25</span><span>Vercel 실행</span></div>
+    </section>
+
+    <section class="slide" data-note="이제 실제 과제입니다. 세 단계를 따르되 시간 제한을 지킵니다. 스킬이 없으면 Week3 병목 문장으로 20분 이내 작은 SKILL.md를 만듭니다." data-source="User direction, 2026-07-30 · Week4 SKILL.md · skill-tuneup/SKILL.md">
+      <p class="eyebrow">실습 지시</p>
+      <h2>한 사람의 병목을,<br>처음 보는 사람이 한 번 시도해 볼 수 있게 만드세요.</h2>
+      <p class="lead">기능 수가 아니라 ‘누구를 위한 무엇인지’가 30초 안에 보이는지를 기준으로 합니다.</p>
+      <div class="grid-3">
+        <article class="card"><p class="kicker">STEP 1</p><h3>내 스킬을 수리</h3><p><code>/skill-tuneup</code>으로 발동 · 산출 · 이양 중 한 가지만 고칩니다.</p></article>
+        <article class="card green"><p class="kicker">STEP 2</p><h3>Superpowers로 설계</h3><p>처음 보는 사용자가 누구인지, 무엇이 막혔는지, 페이지에서 무엇을 해볼지를 세 문장으로 좁힙니다.</p></article>
+        <article class="card orange"><p class="kicker">STEP 3</p><h3>Vercel로 닿게</h3><p>가능하면 한 페이지를 배포하고 접근을 확인합니다. 권한이 막히면 기록한 뒤 Skill PR로 완주합니다.</p></article>
+      </div>
+      <div class="footer"><span class="slide-number">18 / 25</span><span>실습 지시</span></div>
+    </section>
+
+    <section class="slide" data-note="시간이 짧기 때문에 static one-pager 이외의 기능을 금지합니다. database, login, AI backend 등은 오늘의 성공 조건이 아닙니다." data-source="User direction, 2026-07-30">
+      <p class="eyebrow">웹사이트 미션</p>
+      <h2>웹사이트는 내 스킬을 ‘설명’하는 페이지가 아니라,<br>처음 사용으로 연결하는 작은 문입니다.</h2>
+      <p class="lead">DB·로그인·AI backend는 오늘 만들지 않습니다. 정적 한 페이지면 충분합니다.</p>
+      <div class="mini-app">
+        <div class="requirements">
+          <h3>한 페이지의 5칸</h3>
+          <div class="req"><b>1</b><span>스킬 이름 + 한 문장 약속</span></div>
+          <div class="req"><b>2</b><span>누구의 어떤 병목인가</span></div>
+          <div class="req"><b>3</b><span>사용 전 / 사용 후 또는 실제 예시</span></div>
+          <div class="req"><b>4</b><span>따라 해 볼 3단계</span></div>
+          <div class="req"><b>5</b><span>“나도 해보기” 첫 행동</span></div>
+        </div>
+        <div class="wireframe" aria-label="웹사이트 최소 와이어프레임">
+          <small>SKILL NAME</small><h3>한 문장으로<br>무엇을 바꾸는가</h3>
+          <div class="sample">예시 입력 &nbsp; → &nbsp; 예시 결과</div>
+          <div class="cta">나도 해보기</div>
+        </div>
+      </div>
+      <p class="statement warning">시간이 30분을 넘기면: 기능을 더하지 말고, ‘예시 입력 → 예시 결과’만 남깁니다.</p>
+      <div class="footer"><span class="slide-number">19 / 25</span><span>웹사이트 미션</span></div>
+    </section>
+
+    <section class="slide" data-note="사이트 작성자에게 설명하지 못하게 하고, 동료에게 URL만 줍니다. 네 질문에 대한 답이 사이트/스킬의 다음 수정 입력입니다." data-source="User direction, 2026-07-30 · Superpowers official plugin page">
+      <p class="eyebrow">동료 테스트</p>
+      <h2>작성자가 설명하지 않은 채,<br>동료가 URL만 보고 답하게 합니다.</h2>
+      <p class="lead">순서: 로컬 확인 → <code>/deploy</code> → URL 동료 테스트 → 한 곳 수정 → <code>/deploy</code> 다시. 동료가 막힌 곳은 고칠 데이터입니다.</p>
+      <div class="peer-grid">
+        <article class="peer-card"><span class="q">01</span><div><b>이 스킬은 누구를 위한 것인가?</b><p>작성자는 설명하지 않고 기록만 합니다.</p></div></article>
+        <article class="peer-card"><span class="q">02</span><div><b>어떤 막막함을 줄여 주는가?</b><p>한 문장으로 말할 수 있는지 봅니다.</p></div></article>
+        <article class="peer-card"><span class="q">03</span><div><b>지금 바로 무엇을 해 볼 수 있는가?</b><p>첫 행동이 실제로 보이는지 확인합니다.</p></div></article>
+        <article class="peer-card"><span class="q">04</span><div><b>어디가 아직 불명확한가?</b><p>그 한 곳만 고치고 다음으로 갑니다.</p></div></article>
+      </div>
+      <p class="statement">첫 배포는 동료 테스트의 시작입니다. 고친 뒤에는 다시 <code>/deploy</code>하고, 배포 URL이 실제로 접근 가능한지 확인합니다.</p>
+      <div class="footer"><span class="slide-number">20 / 25</span><span>동료 테스트</span></div>
+    </section>
+
+    <section class="slide" data-note="새 웹사이트 산출물과 기존 Week4 PR의 경로가 충돌하지 않도록 목적지를 분리합니다. Vercel URL은 개인 사이트, PR은 peer-skills의 재사용 스킬입니다. PR body에 URL을 넣을 수 있습니다." data-source="User direction, 2026-07-30 · https://github.com/dp-investor-club/my-investor-club-workspace/blob/main/peer-skills/README.md · submit/SKILL.md">
+      <p class="eyebrow">두 개의 목적지</p>
+      <h2>웹사이트와 스킬 PR은 같은 날 만들지만,<br>서로 다른 곳에 남습니다.</h2>
+      <div class="destinations">
+        <article class="destination site"><p class="where">VERCEL</p><h3>개인 웹사이트</h3><p>내 사이트의 배포 URL<br>→ 접근 권한을 먼저 확인하고<br>→ 동료 피드백을 받는 표면</p></article>
+        <div class="connector" aria-hidden="true"></div>
+        <article class="destination pr"><p class="where">MY INVESTOR CLUB WORKSPACE</p><h3>공동 스킬 PR</h3><p><code>peer-skills/</code> 아래의 스킬 사본<br>→ 리뷰 가능한 PR<br>→ 다음 사람이 골라 받아 쓸 자산</p></article>
+      </div>
+      <p class="statement darkish">PR 본문에는 Vercel URL을 넣을 수 있지만, 현재 공통 레포의 PR 경로는 ‘스킬 사본’을 위한 경로입니다.</p>
+      <div class="footer"><span class="slide-number">21 / 25</span><span>두 개의 목적지</span></div>
+    </section>
+
+    <section class="slide" data-note="현재 Week4 submit 규칙을 적용합니다. 원본 skill은 내 .claude/skills에 남기고, PR로 보낼 사본만 peer-skills에 만듭니다. collaborator invite가 없는 경우는 진행자에게 바로 알려야 합니다." data-source="https://github.com/dp-investor-club/my-investor-club-workspace/blob/main/.claude/skills/submit/SKILL.md · week4/SKILL.md">
+      <p class="eyebrow">PR 실습</p>
+      <h2>공동 Workspace에는 내 원본을 덮어쓰지 않고,<br>동료가 받을 수 있는 사본을 제안합니다.</h2>
+      <div class="pr-path">
+        <article class="node"><p class="n">01</p><h3>내 원본</h3><p><code>.claude/skills/&lt;스킬&gt;/</code></p></article>
+        <article class="node"><p class="n">02</p><h3>branch</h3><p><code>skill/{ID}-{스킬}</code></p></article>
+        <article class="node"><p class="n">03</p><h3>사본</h3><p><code>peer-skills/peer-{ID}-{스킬}/</code></p></article>
+        <article class="node"><p class="n">04</p><h3>PR</h3><p>리뷰 요청 + 사이트 URL</p></article>
+      </div>
+      <p class="statement danger"><strong>권한 실패 시:</strong> GitHub ID가 collaborator로 초대됐는지 먼저 확인합니다. Permission denied는 코드를 더 고쳐서 푸는 문제가 아닙니다.</p>
+      <div class="footer"><span class="slide-number">22 / 25</span><span>PR 실습</span></div>
+    </section>
+
+    <section class="slide" data-note="PR에 필요한 네 줄은 current /submit 문서에서 옵니다. Vercel URL은 새 사이트 산출물의 링크로 선택적으로 넣습니다. secrets must not be committed." data-source="https://github.com/dp-investor-club/my-investor-club-workspace/blob/main/.claude/skills/submit/SKILL.md · skill-tuneup/SKILL.md">
+      <p class="eyebrow">PR 실습</p>
+      <h2>리뷰어가 필요한 건 예쁜 소개가 아니라,<br>이 스킬을 지금 받아서 쓸 수 있는 정보입니다.</h2>
+      <div class="pr-list">
+        <div class="pr-row"><span class="n">01</span><b>어떤 병목을 푸는가</b><span>한 문장 — journey.md의 병목 문장을 써도 됩니다.</span></div>
+        <div class="pr-row"><span class="n">02</span><b>입력 → 무엇이 남는가</b><span>사용자가 무엇을 주고, 끝나면 어디에 무엇이 남는지.</span></div>
+        <div class="pr-row"><span class="n">03</span><b>설치 후 첫 실행</b><span>다른 사람이 그대로 말하거나 입력할 첫 문장.</span></div>
+        <div class="pr-row"><span class="n">04</span><b>아직 안 되는 것</b><span>모르면 “아직 모름”이라고 정직하게 씁니다.</span></div>
+        <div class="pr-row added"><span class="n">+</span><b>Vercel URL</b><span>스킬을 처음 이해할 수 있는 사이트 링크를 선택적으로 덧붙입니다.</span></div>
+      </div>
+      <p class="statement danger">마지막 확인: secret, token, .env, 계좌 정보, 타인 연락처는 절대 commit하지 않습니다.</p>
+      <div class="footer"><span class="slide-number">23 / 25</span><span>PR 실습</span></div>
+    </section>
+
+    <section class="slide" data-note="수업 시작 전에 이 네 가지를 확인합니다. 현재 Mac mini에는 Claude Code와 Vercel CLI가 있지만 Superpowers/Vercel plugin 설치와 Vercel auth는 학생 각자의 기기에서 검증해야 합니다." data-source="https://github.com/obra/superpowers/blob/main/README.md · https://github.com/vercel/vercel-deploy-claude-code-plugin · local read-only readiness check 2026-07-30">
+      <p class="eyebrow">시작 전 3분 점검</p>
+      <h2>플러그인은 설치됐다는 말이 아니라,<br>실제로 한 번 실행됐을 때 수업 도구가 됩니다.</h2>
+      <div class="checklist">
+        <article class="check"><span class="num">1</span><div><b>Claude Code</b><p><code>claude</code>가 열리고 <code>/plugin</code> 메뉴가 보인다</p></div></article>
+        <article class="check"><span class="num">2</span><div><b>Superpowers</b><p>설치 후 brainstorming 계열 명령을 1회 확인</p></div></article>
+        <article class="check"><span class="num">3</span><div><b>Vercel</b><p>Vercel CLI + 계정 로그인 + <code>/vercel-setup</code> 진입 확인</p></div></article>
+        <article class="check"><span class="num">4</span><div><b>GitHub</b><p>GitHub ID의 collaborator 초대 상태를 진행자가 확인</p></div></article>
+      </div>
+      <p class="statement warning">안 되면: 오류 화면이나 문구를 그대로 보여 주세요. “설치가 안 됨”과 “권한이 없음”은 서로 다른 문제입니다.</p>
+      <div class="footer"><span class="slide-number">24 / 25</span><span>시작 전 점검</span></div>
+    </section>
+
+    <section class="slide dark hero" data-note="끝은 감사 인사가 아니라 실제 산출물로 닫습니다. 세 줄 결산과 Slack 제출로 오늘의 배움이 대화가 아닌 파일/링크로 남게 합니다." data-source="User direction, 2026-07-30 · Week4 SKILL.md · session-wrap/SKILL.md">
+      <p class="eyebrow">WEEK 4 · CLOSE</p>
+      <h1>내 웹사이트는<br>내 스킬을 <span class="accent">보이게</span> 하고,<br><br>내 PR은<br>다음 사람이 <span class="accent">시작하게</span> 한다.</h1>
+      <p class="subline">오늘 바로 남길 것&nbsp;&nbsp; ① Vercel URL &nbsp; ② Skill PR 링크 &nbsp; ③ 다음에 고칠 한 문장</p>
+      <p class="date">세 줄 결산 → Slack 제출</p>
+      <div class="footer"><span class="slide-number">25 / 25</span><span>DP Investor Club · AI Intensive</span></div>
+    </section>
+
+  </main>
+  <div id="controls" aria-label="슬라이드 제어"><button class="nav" id="prev" aria-label="이전 슬라이드">←</button><button class="nav" id="next" aria-label="다음 슬라이드">→</button></div>
+  <aside id="notes" aria-live="polite"><p class="notes-title">PRESENTER NOTES · <span id="notes-index"></span></p><p class="notes-copy" id="notes-copy"></p><p class="notes-source" id="notes-source"></p></aside>
+  <aside id="help" aria-live="polite"><h3>발표 조작</h3><p><strong>← / → / Space</strong> 다음·이전 슬라이드<br><strong>Home / End</strong> 처음·끝<br><strong>N</strong> 발표자 노트<br><strong>F</strong> 전체 화면<br><strong>?</strong> 이 도움말 닫기</p></aside>
+  <script>
+    (() => {
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const progress = document.getElementById('progress');
+      const notesIndex = document.getElementById('notes-index');
+      const notesCopy = document.getElementById('notes-copy');
+      const notesSource = document.getElementById('notes-source');
+      slides.forEach((slide, i) => {
+        const label = slide.querySelector('.slide-number');
+        if (label) label.textContent = `${String(i + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+      });
+      let index = 0;
+      let touchX = null;
+      const clamp = (value) => Math.max(0, Math.min(slides.length - 1, value));
+      function render(next) {
+        index = clamp(next);
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+        progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+        const current = slides[index];
+        notesIndex.textContent = `${String(index + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+        notesCopy.textContent = current.dataset.note || '발표자 노트가 없습니다.';
+        notesSource.textContent = `Sources: ${current.dataset.source || 'User direction'}`;
+        history.replaceState(null, '', `#${index + 1}`);
+      }
+      function toggleNotes() { document.body.classList.toggle('notes-open'); }
+      function toggleHelp() { document.body.classList.toggle('help-open'); }
+      document.getElementById('prev').addEventListener('click', () => render(index - 1));
+      document.getElementById('next').addEventListener('click', () => render(index + 1));
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight' || event.key === ' ' || event.key === 'PageDown') { event.preventDefault(); render(index + 1); }
+        if (event.key === 'ArrowLeft' || event.key === 'PageUp') { event.preventDefault(); render(index - 1); }
+        if (event.key === 'Home') { event.preventDefault(); render(0); }
+        if (event.key === 'End') { event.preventDefault(); render(slides.length - 1); }
+        if (event.key.toLowerCase() === 'n') { toggleNotes(); }
+        if (event.key.toLowerCase() === 'f') { document.documentElement.requestFullscreen?.(); }
+        if (event.key === '?') { toggleHelp(); }
+        if (event.key === 'Escape') { document.body.classList.remove('help-open'); document.body.classList.remove('notes-open'); }
+      });
+      document.addEventListener('touchstart', (event) => { touchX = event.changedTouches[0].clientX; }, { passive: true });
+      document.addEventListener('touchend', (event) => { if (touchX === null) return; const delta = event.changedTouches[0].clientX - touchX; if (Math.abs(delta) > 60) render(index + (delta < 0 ? 1 : -1)); touchX = null; }, { passive: true });
+      const requested = Number(location.hash.slice(1));
+      render(Number.isFinite(requested) && requested > 0 ? requested - 1 : 0);
+    })();
+  </script>
+</body>
+</html>
